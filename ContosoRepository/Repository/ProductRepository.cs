@@ -1,5 +1,4 @@
-﻿using Decorator.DataAccess.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,8 +32,8 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetAsync(string value)
     {
         return await _db.Products.Where(product =>
-            product.Name.StartsWith(value) ||
-            product.Color.StartsWith(value))
+            product.Code.StartsWith(value) 
+            || product.Name.StartsWith(value))
         .AsNoTracking()
         .ToListAsync();
     }

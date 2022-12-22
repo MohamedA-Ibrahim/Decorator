@@ -187,7 +187,7 @@ namespace Contoso.App.Views
         /// Selects the tapped customer. 
         /// </summary>
         private void DataGrid_RightTapped(object sender, RightTappedRoutedEventArgs e) =>
-            ViewModel.SelectedCustomer = (e.OriginalSource as FrameworkElement).DataContext as CustomerViewModel;
+            ViewModel.SelectedCustomer = (e.OriginalSource as FrameworkElement).DataContext as ProductViewModel;
 
         /// <summary>
         /// Opens the order detail page for the user to create an order for the selected customer.

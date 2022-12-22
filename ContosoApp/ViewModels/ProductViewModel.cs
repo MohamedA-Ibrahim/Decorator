@@ -4,24 +4,20 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
 using CommunityToolkit.WinUI;
-using Decorator.DataAccess.Models;
-
+using Decorator.DataAccess;
 
 namespace Contoso.App.ViewModels
 {
-    /// <summary>
-    /// Provides a bindable wrapper for the Customer model class, encapsulating various services for access by the UI.
-    /// </summary>
-    public class CustomerViewModel : BindableBase, IEditableObject
+    public class ProductViewModel : BindableBase, IEditableObject
     {
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
 
         /// <summary>
         /// Initializes a new instance of the CustomerViewModel class that wraps a Customer object.
         /// </summary>
-        public CustomerViewModel(Customer model = null)
+        public ProductViewModel(Product model = null)
         {
-            Model = model ?? new Customer();
+            Model = model ?? new Product();
             //RefreshOrders();
         }
 

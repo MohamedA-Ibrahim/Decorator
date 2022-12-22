@@ -18,14 +18,14 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public MainViewModel() => Task.Run(GetCustomerListAsync);
 
-        public ObservableCollection<CustomerViewModel> Customers { get; } = new ObservableCollection<CustomerViewModel>();
+        public ObservableCollection<ProductViewModel> Customers { get; } = new ObservableCollection<ProductViewModel>();
 
-        private CustomerViewModel _selectedCustomer;
+        private ProductViewModel _selectedCustomer;
 
         /// <summary>
         /// Gets or sets the selected customer, or null if no customer is selected. 
         /// </summary>
-        public CustomerViewModel SelectedCustomer
+        public ProductViewModel SelectedCustomer
         {
             get => _selectedCustomer;
             set => Set(ref _selectedCustomer, value);
@@ -55,15 +55,15 @@ namespace Contoso.App.ViewModels
                 return;
             }
 
-            await dispatcherQueue.EnqueueAsync(() =>
+            await dispatcherQueue.EnqueueAsync((System.Action)(() =>
             {
                 Customers.Clear();
                 foreach (var c in customers)
                 {
-                    Customers.Add(new CustomerViewModel(c));
+                    Customers.Add((ProductViewModel)new ViewModels.CustomerViewModel(c));
                 }
                 IsLoading = false;
-            });
+            }));
         }
 
         /// <summary>

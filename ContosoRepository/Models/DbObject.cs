@@ -1,6 +1,6 @@
 using System;
 
-namespace Decorator.DataAccess.Models
+namespace Decorator.DataAccess
 {
     public class DbObject
     {

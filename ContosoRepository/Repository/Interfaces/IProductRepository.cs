@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Decorator.DataAccess.Models;
+using Decorator.DataAccess;
 
 namespace Decorator.DataAccess;
 

@@ -26,7 +26,7 @@ namespace Contoso.App.Views
         /// <summary>
         /// Used to bind the UI to the data.
         /// </summary>
-        public CustomerViewModel ViewModel { get; set; }
+        public ProductViewModel ViewModel { get; set; }
 
         /// <summary>
         /// Navigate to the previous page when the user cancels the creation of a new customer record.
@@ -40,7 +40,7 @@ namespace Contoso.App.Views
         {
             if (e.Parameter == null)
             {
-                ViewModel = new CustomerViewModel
+                ViewModel = new ProductViewModel
                 {
                     IsNewCustomer = true,
                     IsInEdit = true

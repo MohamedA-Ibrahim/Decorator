@@ -1,5 +1,4 @@
-﻿using Decorator.DataAccess.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,34 +14,26 @@ namespace Decorator.DataAccess
 
         public async Task<IEnumerable<Order>> GetAsync() =>
             await _db.Orders
-                .Include(order => order.LineItems)
-                .ThenInclude(lineItem => lineItem.Product)
+                .Include(order => order.OrderDetails)
+                .ThenInclude(orderDetail => orderDetail.ProductDimension)
                 .AsNoTracking()
                 .ToListAsync();
 
         public async Task<Order> GetAsync(Guid id) =>
             await _db.Orders
-                .Include(order => order.LineItems)
-                .ThenInclude(lineItem => lineItem.Product)
+                .Include(order => order.OrderDetails)
+                .ThenInclude(orderDetail => orderDetail.ProductDimension)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(order => order.Id == id);
 
-        public async Task<IEnumerable<Order>> GetForCustomerAsync(Guid id) =>
-            await _db.Orders
-                .Where(order => order.CustomerId == id)
-                .Include(order => order.LineItems)
-                .ThenInclude(lineItem => lineItem.Product)
-                .AsNoTracking()
-                .ToListAsync();
 
         public async Task<IEnumerable<Order>> GetAsync(string value)
         {
             if (value == null)
             {
                 return await _db.Orders
-                .Include(order => order.Customer)
-                .Include(order => order.LineItems)
-                .ThenInclude(lineItem => lineItem.Product)
+                .Include(order => order.OrderDetails)
+                .ThenInclude(orderDetail => orderDetail.ProductDimension)
                 .AsNoTracking()
                 .ToListAsync();
             }
@@ -50,12 +41,11 @@ namespace Decorator.DataAccess
             {
                 string[] parameters = value.Split(' ');
                 return await _db.Orders
-                    .Include(order => order.Customer)
-                    .Include(order => order.LineItems)
-                    .ThenInclude(lineItem => lineItem.Product)
+                .Include(order => order.OrderDetails)
+                .ThenInclude(orderDetail => orderDetail.ProductDimension)
                     .Where(order => parameters
                         .Any(parameter =>
-                            order.Customer.FirstName.StartsWith(parameter) ||
+                            order.CustomerName.StartsWith(parameter) ||
                             order.InvoiceNumber.ToString().StartsWith(parameter)))
                     .AsNoTracking()
                     .ToListAsync();

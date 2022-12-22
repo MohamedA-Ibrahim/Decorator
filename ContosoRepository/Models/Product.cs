@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 
-namespace Decorator.DataAccess.Models
-{
-    public class Product : DbObject
-    { 
-        public string Name { get; set; }
+namespace Decorator.DataAccess;
 
-        public string Code { get; set; }
-    }
+public class Product : DbObject
+{ 
+    public string Name { get; set; }
+
+    public string Code { get; set; }
+
+    public ICollection<ProductDimension> ProductDimensions { get; set; }
 }

@@ -16,8 +16,6 @@ namespace Decorator.DataAccess
             }
         }
 
-        public ICustomerRepository Customers => new CustomerRepository( new ApplicationDbContext(_dbOptions));
-
         public IOrderRepository Orders => new OrderRepository(new ApplicationDbContext(_dbOptions));
 
         public IProductRepository Products => new ProductRepository(new ApplicationDbContext(_dbOptions));
