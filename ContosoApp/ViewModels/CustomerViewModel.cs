@@ -1,34 +1,10 @@
-﻿//  ---------------------------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-// 
-//  The MIT License (MIT)
-// 
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-// 
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-// 
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//  ---------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
 using CommunityToolkit.WinUI;
-using Contoso.Models;
+using Decorator.DataAccess.Models;
 
 
 namespace Contoso.App.ViewModels
@@ -43,7 +19,11 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Initializes a new instance of the CustomerViewModel class that wraps a Customer object.
         /// </summary>
-        public CustomerViewModel(Customer model = null) => Model = model ?? new Customer();
+        public CustomerViewModel(Customer model = null)
+        {
+            Model = model ?? new Customer();
+            //RefreshOrders();
+        }
 
         private Customer _model;
 
@@ -58,7 +38,6 @@ namespace Contoso.App.ViewModels
                 if (_model != value)
                 {
                     _model = value;
-                    RefreshOrders();
 
                     // Raise the PropertyChanged event for all properties.
                     OnPropertyChanged(string.Empty);
@@ -238,6 +217,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task SaveAsync()
         {
+            //TODO: Check
             IsInEdit = false;
             IsModified = false;
             if (IsNewCustomer)
@@ -292,7 +272,7 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task RefreshCustomerAsync()
         {
-            RefreshOrders();
+            //RefreshOrders();
             Model = await App.Repository.Customers.GetAsync(Model.Id);
         }
 
@@ -306,23 +286,23 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public async Task LoadOrdersAsync()
         {
-            await dispatcherQueue.EnqueueAsync(() =>
-            {
-                IsLoading = true;
-            });
+            //await dispatcherQueue.EnqueueAsync(() =>
+            //{
+            //    IsLoading = true;
+            //});
 
-            var orders = await App.Repository.Orders.GetForCustomerAsync(Model.Id);
+            //var orders = await App.Repository.Orders.GetForCustomerAsync(Model.Id);
 
-            await dispatcherQueue.EnqueueAsync(() =>
-            {
-                Orders.Clear();
-                foreach (var order in orders)
-                {
-                    Orders.Add(order);
-                }
+            //await dispatcherQueue.EnqueueAsync(() =>
+            //{
+            //    Orders.Clear();
+            //    foreach (var order in orders)
+            //    {
+            //        Orders.Add(order);
+            //    }
 
-                IsLoading = false;
-            });
+            //    IsLoading = false;
+            //});
         }
 
         /// <summary>

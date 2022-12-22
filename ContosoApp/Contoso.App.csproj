@@ -11,6 +11,7 @@
     <UseWinUI>true</UseWinUI>
     <EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
+    <UseWPF>False</UseWPF>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="AppShell.xaml" />
@@ -56,7 +57,6 @@
     <None Remove="Assets\Wide310x150Logo.scale-150.png" />
     <None Remove="Assets\Wide310x150Logo.scale-400.png" />
     <None Remove="MainWindow.xaml" />
-    <None Remove="UserControls\AuthenticationControl.xaml" />
     <None Remove="UserControls\CollapsibleSearchBox.xaml" />
     <None Remove="Views\CustomerDetailPage.xaml" />
     <None Remove="Views\CustomerListPage.xaml" />
@@ -94,8 +94,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ContosoModels\Contoso.Models.csproj" />
-    <ProjectReference Include="..\ContosoRepository\Contoso.Repository.csproj" />
+    <ProjectReference Include="..\ContosoRepository\Decorator.DataAccess.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="AppShell.xaml">
@@ -103,9 +102,6 @@
     </Page>
     <Page Update="MainWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="UserControls\AuthenticationControl.xaml">
-      <SubType>Designer</SubType>
     </Page>
     <Page Update="UserControls\CollapsibleSearchBox.xaml">
       <SubType>Designer</SubType>

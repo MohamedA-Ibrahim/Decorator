@@ -1,30 +1,10 @@
-<!--
-    Copyright (c) Microsoft Corporation.  All rights reserved.
-    The MIT License (MIT)
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
--->
-
 <Page
     x:Class="Contoso.App.Views.OrderDetailPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:Contoso.Models"
+    xmlns:models="using:Decorator.DataAccess.Models"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:sys="using:System"
     NavigationCacheMode="Required"
@@ -39,6 +19,7 @@
         <DataTemplate
             x:Key="DefaultLineItemTemplate"
             x:DataType="models:LineItem">
+            
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="250" />
@@ -48,10 +29,13 @@
                     <ColumnDefinition Width="32" />
                     <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
+                
                 <Border
                     Grid.ColumnSpan="4"
                     BorderBrush="LightGray"
                     BorderThickness="0,0,0,1" />
+                
+                <!--Order Products-->
                 <TextBlock
                     Grid.Column="0"
                     Margin="0,0,0,0"
@@ -69,6 +53,7 @@
                     Padding="0,0,0,0"
                     HorizontalAlignment="Right"
                     Text="{x:Bind Quantity}" />
+                
                 <Button
                     Grid.Row="0"
                     Grid.Column="5"
@@ -81,6 +66,7 @@
                     Click="RemoveProduct_Click"
                     Content="&#xE711;"
                     FontFamily="{ThemeResource SymbolThemeFontFamily}">
+                    
                     <Button.Resources>
                         <ResourceDictionary>
                             <ResourceDictionary.ThemeDictionaries>
@@ -100,6 +86,7 @@
                         </ResourceDictionary>
                     </Button.Resources>
                 </Button>
+                
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -120,6 +107,7 @@
                     Style="{StaticResource PageTitleTextBlockStyle}"
                     Text="{x:Bind ViewModel.InvoiceNumber, Mode=OneWay}"
                     Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay}" />
+                
                 <TextBlock
                     Margin="0"
                     Style="{StaticResource PageTitleTextBlockStyle}"
@@ -238,17 +226,19 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <TextBlock
+
+                        <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 Margin="0,0,10,0"
                                 FontWeight="Normal">
                                 Placed:
-                            </TextBlock>
-                            <TextBlock
+                        </TextBlock>
+                        <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.DatePlaced), Mode=OneWay}" />
+                            
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
@@ -262,8 +252,7 @@
                                 Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.DateFilled), Mode=OneWay}" />
                         </Grid>
 
-                        <StackPanel
-                            x:Name="OrderStatus"
+                        <StackPanel x:Name="OrderStatus"
                             Margin="0,0,0,0"
                             HorizontalAlignment="Right">
                             <TextBlock
@@ -275,8 +264,7 @@
                                 ItemsSource="{x:Bind ViewModel.OrderStatusValues}"
                                 SelectedItem="{x:Bind ViewModel.OrderStatus.ToString(), BindBack=ViewModel.SetOrderStatus, Mode=TwoWay}" />
                         </StackPanel>
-                        <StackPanel
-                            x:Name="PaymentTerm"
+                        <StackPanel x:Name="PaymentTerm"
                             Margin="0,0,0,0"
                             HorizontalAlignment="Right">
                             <TextBlock
@@ -288,8 +276,7 @@
                                 ItemsSource="{x:Bind ViewModel.TermValues}"
                                 SelectedItem="{x:Bind ViewModel.Term.ToString(), BindBack=ViewModel.SetTerm, Mode=TwoWay}" />
                         </StackPanel>
-                        <StackPanel
-                            x:Name="PaymentStatus"
+                        <StackPanel x:Name="PaymentStatus"
                             Margin="0,0,0,0"
                             HorizontalAlignment="Right">
                             <TextBlock
@@ -367,7 +354,7 @@
                             </ListView.ItemContainerStyle>
                         </ListView>
 
-                        <!--  New line item section  -->
+                        <!--  New product section  -->
                         <Grid
                             Margin="0,20,0,0"
                             HorizontalAlignment="Stretch">
@@ -425,7 +412,7 @@
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                     </Style>
                                 </AutoSuggestBox.ItemContainerStyle>
-                            </AutoSuggestBox>
+                            </AutoSuggestBox>                                     
                             <Grid
                                 x:Name="ItemQtyPanel"
                                 Grid.Column="2"
@@ -446,8 +433,8 @@
                                     SpinButtonPlacementMode="Compact"
                                     Text="{x:Bind ViewModel.NewLineItem.Quantity, Mode=TwoWay}"/>
                             </Grid>
-                            <Grid
-                                x:Name="ItemAddPanel"
+                            
+                            <Grid x:Name="ItemAddPanel"
                                 Grid.Column="3">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="32" />

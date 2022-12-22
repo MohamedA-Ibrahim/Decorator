@@ -1,28 +1,4 @@
-﻿//  ---------------------------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-// 
-//  The MIT License (MIT)
-// 
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-// 
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-// 
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//  ---------------------------------------------------------------------------------
-
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
@@ -32,9 +8,7 @@ using Windows.Globalization;
 using Windows.Storage;
 using Contoso.App.ViewModels;
 using Contoso.App.Views;
-using Contoso.Repository;
-using Contoso.Repository.Rest;
-using Contoso.Repository.Sql;
+using Decorator.DataAccess;
 
 namespace Contoso.App
 {
@@ -58,13 +32,18 @@ namespace Contoso.App
         /// <summary>
         /// Pipeline for interacting with backend service or database.
         /// </summary>
-        public static IContosoRepository Repository { get; private set; }
+        public static IRepository Repository { get; private set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        public App() => InitializeComponent();
+        public App() { 
+
+            InitializeComponent();
+            App.Current.RequestedTheme = ApplicationTheme.Light;
+
+        }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.
@@ -73,20 +52,7 @@ namespace Contoso.App
         {
             m_window = new MainWindow();
 
-            // Load the database.
-            if (ApplicationData.Current.LocalSettings.Values.TryGetValue(
-                "data_source", out object dataSource))
-            {
-                switch (dataSource.ToString())
-                {
-                    case "Rest": UseRest(); break;
-                    default: UseSqlite(); break;
-                }
-            }
-            else
-            {
-                UseSqlite();
-            }
+            UseSqlite();
 
             // Prepare the app shell and window content.
             AppShell shell = m_window.Content as AppShell ?? new AppShell();
@@ -116,20 +82,10 @@ namespace Contoso.App
             {
                 File.Copy(demoDatabasePath, databasePath);
             }
-            var dbOptions = new DbContextOptionsBuilder<ContosoContext>().UseSqlite(
+            var dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(
                 "Data Source=" + databasePath);
-            Repository = new SqlContosoRepository(dbOptions);
+            Repository = new Repository(dbOptions);
         }
 
-        /// <summary>
-        /// Configures the app to use the REST data source. For convenience, a read-only source is provided. 
-        /// You can also deploy your own copy of the REST service locally or to Azure. See the README for details.
-        /// </summary>
-        public static void UseRest() 
-        {
-            var accessToken = Task.Run(async () => await MsalHelper.GetTokenAsync(Constants.WebApiScopes)).Result;
-
-            Repository = new RestContosoRepository($"{Constants.ApiUrl}/api/", accessToken);
-        }
     }
 }

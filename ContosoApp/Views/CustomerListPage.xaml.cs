@@ -1,27 +1,3 @@
-//  ---------------------------------------------------------------------------------
-//  Copyright (c) Microsoft Corporation.  All rights reserved.
-//
-//  The MIT License (MIT)
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-//  ---------------------------------------------------------------------------------
-
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,9 +13,6 @@ using Contoso.App.ViewModels;
 
 namespace Contoso.App.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class CustomerListPage : Page
     {
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
@@ -84,8 +57,7 @@ namespace Contoso.App.Views
                 // If no search query is entered, refresh the complete list.
                 if (String.IsNullOrEmpty(sender.Text))
                 {
-                    await dispatcherQueue.EnqueueAsync(async () =>
-                        await ViewModel.GetCustomerListAsync());
+                    await dispatcherQueue.EnqueueAsync(async () => await ViewModel.GetCustomerListAsync());
                     sender.ItemsSource = null;
                 }
                 else
@@ -128,8 +100,7 @@ namespace Contoso.App.Views
         /// </summary>
         private async Task ResetCustomerList()
         {
-            await dispatcherQueue.EnqueueAsync(async () =>
-                await ViewModel.GetCustomerListAsync());
+            await dispatcherQueue.EnqueueAsync(async () => await ViewModel.GetCustomerListAsync());
         }
 
         /// <summary>
@@ -161,14 +132,6 @@ namespace Contoso.App.Views
                     ViewModel.Customers.Add(match);
                 }
             });
-        }
-
-        /// <summary>
-        /// Resets the customer list when leaving the page.
-        /// </summary>
-        protected async override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            await ResetCustomerList();
         }
 
         /// <summary>
@@ -237,5 +200,9 @@ namespace Contoso.App.Views
         /// </summary>
         private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e) =>
             (sender as DataGrid).Sort(e.Column, ViewModel.Customers.Sort);
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }
