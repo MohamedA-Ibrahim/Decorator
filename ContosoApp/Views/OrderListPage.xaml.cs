@@ -6,7 +6,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Email;
 using CommunityToolkit.WinUI.UI.Controls;
-using Decorator.DataAccess.Models;
+using Decorator.DataAccess;
 using Contoso.App.ViewModels;
 
 namespace Contoso.App.Views
@@ -87,33 +87,11 @@ namespace Contoso.App.Views
         }
 
         /// <summary>
-        /// Creates an email about the currently selected invoice. 
-        /// </summary>
-        private async void EmailButton_Click(object sender, RoutedEventArgs e)
-        {
-            var emailMessage = new EmailMessage
-            {
-                Body = $"Dear {ViewModel.SelectedOrder.CustomerName},",
-                Subject = "A message from Contoso about order " +
-                    $"#{ViewModel.SelectedOrder.InvoiceNumber} placed on " +
-                    $"{ViewModel.SelectedOrder.DatePlaced.ToString("MM/dd/yyyy")}"
-            };
-
-            if (!string.IsNullOrEmpty(ViewModel.SelectedCustomer.Email))
-            {
-                var emailRecipient = new EmailRecipient(ViewModel.SelectedCustomer.Email);
-                emailMessage.To.Add(emailRecipient);
-            }
-            await EmailManager.ShowComposeNewEmailAsync(emailMessage);
-
-        }
-
-        /// <summary>
         /// Searches the list of orders.
         /// </summary>
         private void OrderSearch_QuerySubmitted(AutoSuggestBox sender, 
             AutoSuggestBoxQuerySubmittedEventArgs args) => 
-                ViewModel.QueryOrders(args.QueryText);
+                ViewModel.SearchOrders(args.QueryText);
 
         /// <summary>
         /// Updates the suggestions for the AutoSuggestBox as the user types. 

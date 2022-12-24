@@ -54,9 +54,9 @@
 
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
-                    x:Name="CustomerListMenuItem"
-                    Content="{x:Bind CustomerListLabel}" 
-                    ToolTipService.ToolTip="{x:Bind CustomerListLabel}"
+                    x:Name="ProductListMenuItem"
+                    Content="{x:Bind ProductListLabel}" 
+                    ToolTipService.ToolTip="{x:Bind ProductListLabel}"
                     Icon="ContactInfo"/>
                 
                 <muxc:NavigationViewItem
@@ -66,7 +66,7 @@
                     Icon="Shop"/>
             </muxc:NavigationView.MenuItems>
 
-            <muxc:NavigationView.PaneFooter>
+            <!--<muxc:NavigationView.PaneFooter>
                 <StackPanel>
                     <muxc:NavigationViewItem
                         Content="View code"
@@ -78,7 +78,7 @@
                     </muxc:NavigationViewItem>
                     
                 </StackPanel>
-            </muxc:NavigationView.PaneFooter>
+            </muxc:NavigationView.PaneFooter>-->
 
             <!-- In OnNavigatingToPage, we synchronize the selected item in the NavigationView with the current page. -->
             <Frame

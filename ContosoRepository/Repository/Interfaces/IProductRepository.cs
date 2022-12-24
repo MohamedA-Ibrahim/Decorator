@@ -12,4 +12,7 @@ public interface IProductRepository
     Task<Product> GetAsync(Guid id);
 
     Task<IEnumerable<Product>> GetAsync(string search);
+
+    Task<Product> UpsertAsync(Product product);
+
 }

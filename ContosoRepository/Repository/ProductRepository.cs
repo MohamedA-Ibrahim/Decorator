@@ -29,6 +29,22 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(product => product.Id == id);
     }
 
+    public async Task<Product> UpsertAsync(Product product)
+    {
+        var existing = await _db.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
+        if (existing == null)
+        {
+            _db.Products.Add(product);
+        }
+        else
+        {
+            _db.Entry(existing).CurrentValues.SetValues(product);
+        }
+        await _db.SaveChangesAsync();
+        return product;
+    }
+
+
     public async Task<IEnumerable<Product>> GetAsync(string value)
     {
         return await _db.Products.Where(product =>

@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:Decorator.DataAccess.Models"
+    xmlns:models="using:Decorator.DataAccess"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:sys="using:System"
     NavigationCacheMode="Required"
@@ -17,8 +17,8 @@
         </Style>
 
         <DataTemplate
-            x:Key="DefaultLineItemTemplate"
-            x:DataType="models:LineItem">
+            x:Key="DefaultOrderDetailTemplate"
+            x:DataType="models:OrderDetail">
             
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -40,13 +40,13 @@
                     Grid.Column="0"
                     Margin="0,0,0,0"
                     Padding="0,0,0,0"
-                    Text="{x:Bind Product.Name}" />
+                    Text="{x:Bind ProductDimension.Product.Name}" />
                 <TextBlock
                     Grid.Column="2"
                     Margin="0,0,0,0"
                     Padding="0,0,0,0"
                     HorizontalAlignment="Right"
-                    Text="{x:Bind sys:String.Format('\{0:c\}', Product.ListPrice)}" />
+                    Text="{x:Bind sys:String.Format('\{0:c\}', ProductDimension.Price)}" />
                 <TextBlock
                     Grid.Column="3"
                     Margin="8,0,0,0"
@@ -113,11 +113,6 @@
                     Style="{StaticResource PageTitleTextBlockStyle}"
                     Text="New order"
                     Visibility="{x:Bind ViewModel.IsNewOrder, Mode=OneWay}" />
-                <TextBlock
-                    Margin="0"
-                    Style="{StaticResource PageTitleTextBlockStyle}"
-                    Text="*"
-                    Visibility="{x:Bind ViewModel.IsModified, Mode=OneWay}" />
             </StackPanel>
 
             <CommandBar
@@ -131,7 +126,6 @@
                     x:Name="SaveOrderButton"
                     Click="SaveButton_Click"
                     Icon="Save"
-                    IsEnabled="{x:Bind ViewModel.IsModified, Mode=OneWay}"
                     Label="Save" />
                 <AppBarButton
                     Click="RevertButton_Click"
@@ -182,30 +176,25 @@
                         <TextBlock
                             Margin="0,0,0,0"
                             IsTextSelectionEnabled="True"
-                            Text="{x:Bind ViewModel.Customer.Address, Mode=OneWay}"
+                            Text="{x:Bind ViewModel.CustomerAddress, Mode=OneWay}"
                             TextWrapping="Wrap" />
                         <TextBlock
                             IsTextSelectionEnabled="True"
-                            Text="{x:Bind ViewModel.Customer.Phone, Mode=OneWay}" />
-                        <HyperlinkButton
-                            Margin="0,0,0,0"
-                            Padding="0,0,0,0"
-                            Click="emailButton_Click"
-                            Content="{x:Bind ViewModel.Customer.Email, Mode=OneWay}" />
+                            Text="{x:Bind ViewModel.CustomerPhone, Mode=OneWay}" />
                         <TextBlock
                             Margin="0,20,0,0"
                             FontWeight="SemiBold">
                             Shipping address
                         </TextBlock>
                         <TextBlock
-                            Text="{x:Bind ViewModel.Address, Mode=OneWay}"
+                            Text="{x:Bind ViewModel.CustomerAddress, Mode=OneWay}"
                             Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay}" />
                         <TextBox
                             x:Name="ShippingAddressTextBox"
                             Width="300"
                             AcceptsReturn="True"
                             InputScope="Maps"
-                            Text="{x:Bind ViewModel.Address, Mode=TwoWay}"
+                            Text="{x:Bind ViewModel.CustomerAddress, Mode=TwoWay}"
                             Visibility="{x:Bind ViewModel.IsNewOrder, Mode=OneWay}" />
                     </StackPanel>
 
@@ -237,7 +226,7 @@
                         <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.DatePlaced), Mode=OneWay}" />
+                                Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.PurchaseDate), Mode=OneWay}" />
                             
                             <TextBlock
                                 Grid.Row="1"
@@ -249,45 +238,10 @@
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="1"
-                                Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.DateFilled), Mode=OneWay}" />
+                                Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.PurchaseDate), Mode=OneWay}" />
                         </Grid>
 
-                        <StackPanel x:Name="OrderStatus"
-                            Margin="0,0,0,0"
-                            HorizontalAlignment="Right">
-                            <TextBlock
-                                Margin="0,20,0,0"
-                                FontWeight="Normal">
-                                Order status
-                            </TextBlock>
-                            <ComboBox
-                                ItemsSource="{x:Bind ViewModel.OrderStatusValues}"
-                                SelectedItem="{x:Bind ViewModel.OrderStatus.ToString(), BindBack=ViewModel.SetOrderStatus, Mode=TwoWay}" />
-                        </StackPanel>
-                        <StackPanel x:Name="PaymentTerm"
-                            Margin="0,0,0,0"
-                            HorizontalAlignment="Right">
-                            <TextBlock
-                                Margin="0,20,0,0"
-                                FontWeight="Normal">
-                                Payment term
-                            </TextBlock>
-                            <ComboBox
-                                ItemsSource="{x:Bind ViewModel.TermValues}"
-                                SelectedItem="{x:Bind ViewModel.Term.ToString(), BindBack=ViewModel.SetTerm, Mode=TwoWay}" />
-                        </StackPanel>
-                        <StackPanel x:Name="PaymentStatus"
-                            Margin="0,0,0,0"
-                            HorizontalAlignment="Right">
-                            <TextBlock
-                                Margin="0,20,0,0"
-                                FontWeight="Normal">
-                                Payment status
-                            </TextBlock>
-                            <ComboBox
-                                ItemsSource="{x:Bind ViewModel.PaymentStatusValues}"
-                                SelectedItem="{x:Bind ViewModel.PaymentStatus.ToString(), BindBack=ViewModel.SetPaymentStatus, Mode=TwoWay}" />
-                        </StackPanel>
+
                     </StackPanel>
 
                     <!--  Line items section  -->
@@ -300,7 +254,7 @@
 
                         <!--  Line items header  -->
                         <Grid
-                            x:Name="DefaultLineItemsHeader"
+                            x:Name="DefaultOrderDetailsHeader"
                             Margin="0,20,0,0"
                             HorizontalAlignment="Stretch">
                             <Grid.ColumnDefinitions>
@@ -339,9 +293,9 @@
 
                         <!--  Line item list  -->
                         <ListView
-                            x:Name="LineItemListView"
-                            ItemTemplate="{StaticResource DefaultLineItemTemplate}"
-                            ItemsSource="{x:Bind ViewModel.LineItems, Mode=OneWay}"
+                            x:Name="OrderDetailListView"
+                            ItemTemplate="{StaticResource DefaultOrderDetailTemplate}"
+                            ItemsSource="{x:Bind ViewModel.OrderDetails, Mode=OneWay}"
                             SelectionMode="None">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem"
@@ -402,7 +356,7 @@
                                                 Grid.Column="2"
                                                 Margin="8,0,8,8"
                                                 HorizontalAlignment="Right"
-                                                Text="{x:Bind sys:String.Format('\{0:c\}', ListPrice)}" />
+                                                Text="ghg" />
                                         </Grid>
                                     </DataTemplate>
                                 </AutoSuggestBox.ItemTemplate>
@@ -424,14 +378,14 @@
                                 <TextBlock
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    Text="{x:Bind ViewModel.NewLineItemProductListPriceFormatted, Mode=OneWay}"/>
+                                    Text="{x:Bind ViewModel.NewOrderDetailProductListPriceFormatted, Mode=OneWay}"/>
                                 <muxc:NumberBox
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Minimum="1"
                                     LargeChange="5"
                                     SpinButtonPlacementMode="Compact"
-                                    Text="{x:Bind ViewModel.NewLineItem.Quantity, Mode=TwoWay}"/>
+                                    Text="{x:Bind ViewModel.NewOrderDetail.Quantity, Mode=TwoWay}"/>
                             </Grid>
                             
                             <Grid x:Name="ItemAddPanel"
@@ -557,7 +511,7 @@
                                 Margin="0,0,0,0"
                                 Padding="0,0,0,0"
                                 HorizontalAlignment="Right"
-                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.Tax), Mode=OneWay}" />
+                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.Subtotal), Mode=OneWay}" />
                             <Border
                                 Grid.Row="3"
                                 Grid.Column="1"
@@ -578,7 +532,7 @@
                                 Padding="0,0,0,0"
                                 HorizontalAlignment="Right"
                                 FontWeight="Bold"
-                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.GrandTotal), Mode=OneWay}" />
+                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.Subtotal), Mode=OneWay}" />
                         </Grid>
                     </StackPanel>
 

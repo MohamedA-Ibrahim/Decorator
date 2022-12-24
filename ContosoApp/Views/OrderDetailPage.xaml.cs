@@ -6,7 +6,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Email;
-using Decorator.DataAccess.Models;
+using Decorator.DataAccess;
 using Contoso.App.ViewModels;
 
 namespace Contoso.App.Views
@@ -16,14 +16,8 @@ namespace Contoso.App.Views
     /// </summary>
     public sealed partial class OrderDetailPage : Page, INotifyPropertyChanged
     {
-        /// <summary>
-        /// Initializes the page.
-        /// </summary>
         public OrderDetailPage() => InitializeComponent();
 
-        /// <summary>
-        /// Stores the view model. 
-        /// </summary>
         private OrderViewModel _viewModel;
 
         /// <summary>
@@ -49,12 +43,12 @@ namespace Contoso.App.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             var guid = (Guid)e.Parameter;
-            var customer = App.ViewModel.Customers.Where(cust => cust.Model.Id == guid).FirstOrDefault();
+            var product = App.ViewModel.Products.Where(x => x.Model.Id == guid).FirstOrDefault();
 
-            if (customer != null)
+            if (product != null)
             {
                 // Order is a new order
-                ViewModel = new OrderViewModel(new Order(customer.Model));
+                ViewModel = new OrderViewModel(new Order());
             }
             else
             {
@@ -66,70 +60,6 @@ namespace Contoso.App.Views
             base.OnNavigatedTo(e);
         }
 
-        /// <summary>
-        /// Check whether there are unsaved changes and warn the user.
-        /// </summary>
-        protected async override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            if (ViewModel.IsModified)
-            {
-                var saveDialog = new SaveChangesDialog()
-                {
-                    Title = $"Save changes to Invoice # {ViewModel.InvoiceNumber.ToString()}?",
-                    Content = $"Invoice # {ViewModel.InvoiceNumber.ToString()} " + 
-                        "has unsaved changes that will be lost. Do you want to save your changes?"
-                };
-                saveDialog.XamlRoot = this.Content.XamlRoot;
-                await saveDialog.ShowAsync();
-                SaveChangesDialogResult result = saveDialog.Result;
-
-                switch (result)
-                {
-                    case SaveChangesDialogResult.Save:
-                        await ViewModel.SaveOrderAsync();
-                        break;
-                    case SaveChangesDialogResult.DontSave:
-                        break;
-                    case SaveChangesDialogResult.Cancel:
-                        if (e.NavigationMode == NavigationMode.Back)
-                        {
-                            Frame.GoForward();
-                        }
-                        else
-                        {
-                            Frame.GoBack();
-                        }
-                        e.Cancel = true;
-
-                        // This flag gets cleared on navigation, so restore it. 
-                        ViewModel.IsModified = true; 
-                        break;
-                }
-            }
-
-            base.OnNavigatingFrom(e);
-        }
-
-        /// <summary>
-        /// Creates an email to the current customer.
-        /// </summary>
-        private async void emailButton_Click(object sender, RoutedEventArgs e)
-        {
-            var emailMessage = new EmailMessage
-            {
-                Body = $"Dear {ViewModel.CustomerName},",
-                Subject = "A message from Contoso about order " +
-                    $"#{ViewModel.InvoiceNumber} placed on {ViewModel.DatePlaced.ToString("MM/dd/yyyy")} "
-            };
-
-            if (!string.IsNullOrEmpty(ViewModel.Customer.Email))
-            {
-                var emailRecipient = new EmailRecipient(ViewModel.Customer.Email);
-                emailMessage.To.Add(emailRecipient);
-            }
-
-            await EmailManager.ShowComposeNewEmailAsync(emailMessage);
-        }
 
         /// <summary>
         /// Reloads the order.
@@ -210,7 +140,7 @@ namespace Contoso.App.Views
             if (args.SelectedItem != null)
             {
                 var selectedProduct = args.SelectedItem as Product;
-                ViewModel.NewLineItem.Product = selectedProduct;
+                ViewModel.NewOrderDetail.ProductDimension.Product = selectedProduct;
             }
         }
 
@@ -219,7 +149,7 @@ namespace Contoso.App.Views
         /// </summary>
         private void AddProductButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.LineItems.Add(ViewModel.NewLineItem.Model);
+            ViewModel.OrderDetails.Add(ViewModel.NewOrderDetail.Model);
             ClearCandidateProduct();
         }
 
@@ -237,14 +167,14 @@ namespace Contoso.App.Views
         private void ClearCandidateProduct()
         {
             ProductSearchBox.Text = string.Empty;
-            ViewModel.NewLineItem = new LineItemViewModel();
+            ViewModel.NewOrderDetail = new OrderDetailViewModel();
         }
 
         /// <summary>
         /// Removes a line item from the order.
         /// </summary>
         private void RemoveProduct_Click(object sender, RoutedEventArgs e) =>
-            ViewModel.LineItems.Remove((sender as FrameworkElement).DataContext as LineItem);
+            ViewModel.OrderDetails.Remove((sender as FrameworkElement).DataContext as OrderDetail);
 
         /// <summary>
         /// Fired when a property value changes. 

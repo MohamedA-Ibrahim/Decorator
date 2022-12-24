@@ -63,7 +63,7 @@ namespace Contoso.App
             {
                 // When the navigation stack isn't restored, navigate to the first page
                 // suppressing the initial entrance animation.
-                shell.AppFrame.Navigate(typeof(CustomerListPage), null,
+                shell.AppFrame.Navigate(typeof(ProductListPage), null,
                     new SuppressNavigationTransitionInfo());
             }
 
@@ -76,14 +76,13 @@ namespace Contoso.App
         /// </summary>
         public static void UseSqlite()
         {
-            string demoDatabasePath = Package.Current.InstalledLocation.Path + @"\Assets\Contoso.db";
-            string databasePath = ApplicationData.Current.LocalFolder.Path + @"\Contoso.db";
+            string demoDatabasePath = Package.Current.InstalledLocation.Path + @"\Assets\Decorator.db";
+            string databasePath = ApplicationData.Current.LocalFolder.Path + @"\Decorator.db";
             if (!File.Exists(databasePath))
             {
                 File.Copy(demoDatabasePath, databasePath);
             }
-            var dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite(
-                "Data Source=" + databasePath);
+            var dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite("Data Source=" + databasePath);
             Repository = new Repository(dbOptions);
         }
 

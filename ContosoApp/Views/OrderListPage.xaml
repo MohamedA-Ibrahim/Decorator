@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="using:Decorator.DataAccess.Models"
+    xmlns:models="using:Decorator.DataAccess"
     xmlns:vm="using:Contoso.App.ViewModels"
     xmlns:sys="using:System"
     xmlns:toolkit="using:CommunityToolkit.WinUI.UI.Controls"
@@ -139,7 +139,6 @@
                                 FontWeight="SemiBold"
                                 Text="{x:Bind ViewModel.SelectedOrder.InvoiceNumber, Mode=OneWay}" />
                     </StackPanel>
-                    <TextBlock Text="{x:Bind ViewModel.SelectedOrderGrandTotalFormatted, Mode=OneWay}" />
 
                     <StackPanel Margin="0,20,0,20">
                         <TextBlock
@@ -148,31 +147,11 @@
                                 Text="{x:Bind ViewModel.SelectedOrder.CustomerName, Mode=OneWay}" />
                         <TextBlock
                                 IsTextSelectionEnabled="True"
-                                Text="{x:Bind ViewModel.SelectedCustomer.Phone, Mode=OneWay}" />
-                        <HyperlinkButton
-                                Margin="0,0,0,0"
-                                Padding="0,0,0,0"
-                                Click="EmailButton_Click"
-                                Content="{x:Bind ViewModel.SelectedCustomer.Email, Mode=OneWay}" />
+                                Text="{x:Bind ViewModel.SelectedOrder.CustomerPhone, Mode=OneWay}" />
                     </StackPanel>
 
                     <TextBlock FontWeight="SemiBold">Shipping address</TextBlock>
-                    <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Address, Mode=OneWay}" />
-
-                    <TextBlock
-                            Margin="0,20,0,0"
-                            FontWeight="SemiBold">
-                            Order status
-                    </TextBlock>
-                    <TextBlock Text="{x:Bind ViewModel.SelectedOrder.Status, Mode=OneWay}" />
-
-                    <TextBlock
-                            Margin="0,20,0,0"
-                            FontWeight="SemiBold">
-                            Payment status
-                    </TextBlock>
-                    <TextBlock Text="{x:Bind ViewModel.SelectedOrder.PaymentStatus, Mode=OneWay}" />
-
+                    <TextBlock Text="{x:Bind ViewModel.SelectedOrder.CustomerAddress, Mode=OneWay}" />
                 </StackPanel>
             </SplitView.Pane>
 
@@ -217,7 +196,7 @@
                                         <TextBlock
                                                 VerticalAlignment="Center"
                                                 Margin="12,0"
-                                                Text="{x:Bind sys:String.Format('\{0:d\}', DatePlaced)}"/>
+                                                Text="{x:Bind sys:String.Format('\{0:d\}', PurchaseDate)}"/>
                                     </DataTemplate>
                                 </toolkit:DataGridTemplateColumn.CellTemplate>
                             </toolkit:DataGridTemplateColumn>
@@ -230,7 +209,7 @@
                                         <TextBlock 
                                                 VerticalAlignment="Center"
                                                 Margin="12,0"
-                                                Text="{x:Bind sys:String.Format('\{0:c\}', GrandTotal)}"/>
+                                                Text="{x:Bind sys:String.Format('\{0:c\}', Subtotal)}"/>
                                     </DataTemplate>
                                 </toolkit:DataGridTemplateColumn.CellTemplate>
                             </toolkit:DataGridTemplateColumn>

@@ -26,7 +26,7 @@ namespace Contoso.App
 
             Loaded += (sender, args) =>
             {
-                NavView.SelectedItem = CustomerListMenuItem;
+                NavView.SelectedItem = ProductListMenuItem;
             };
 
             // Set up custom title bar.
@@ -86,7 +86,7 @@ namespace Contoso.App
             }
         }
 
-        public readonly string CustomerListLabel = "Product list";
+        public readonly string ProductListLabel = "Product list";
 
         public readonly string OrderListLabel = "Order list";
 
@@ -98,7 +98,7 @@ namespace Contoso.App
             var label = args.InvokedItem as string;
             var pageType =
                 args.IsSettingsInvoked ? typeof(SettingsPage) :
-                label == CustomerListLabel ? typeof(CustomerListPage) :
+                label == ProductListLabel ? typeof(ProductListPage) :
                 label == OrderListLabel ? typeof(OrderListPage) : null;
             if (pageType != null && pageType != AppFrame.CurrentSourcePageType)
             {
@@ -114,9 +114,9 @@ namespace Contoso.App
         {
             if (e.NavigationMode == NavigationMode.Back)
             {
-                if (e.SourcePageType == typeof(CustomerListPage))
+                if (e.SourcePageType == typeof(ProductListPage))
                 {
-                    NavView.SelectedItem = CustomerListMenuItem;
+                    NavView.SelectedItem = ProductListMenuItem;
                 }
                 else if (e.SourcePageType == typeof(OrderListPage))
                 {

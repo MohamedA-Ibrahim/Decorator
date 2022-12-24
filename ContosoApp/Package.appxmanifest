@@ -12,8 +12,8 @@
     Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>Enterprise Database (Developer Sample)</DisplayName>
-    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
+    <DisplayName>Decorator</DisplayName>
+    <PublisherDisplayName>Mohamed Ali</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -31,7 +31,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Enterprise Database (Developer Sample)"
+        DisplayName="Decorator"
         Description="A WinUI 3 sample app showcasing features useful to enterprise developers. The sample is based around creating and managing customer accounts, orders, and products for the fictitious company Contoso."
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"

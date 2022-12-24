@@ -15,7 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="AppShell.xaml" />
-    <None Remove="Assets\Contoso.db" />
+    <None Remove="Assets\Decorator.db" />
     <None Remove="Assets\LargeTile.scale-100.png" />
     <None Remove="Assets\LargeTile.scale-125.png" />
     <None Remove="Assets\LargeTile.scale-150.png" />
@@ -58,10 +58,10 @@
     <None Remove="Assets\Wide310x150Logo.scale-400.png" />
     <None Remove="MainWindow.xaml" />
     <None Remove="UserControls\CollapsibleSearchBox.xaml" />
-    <None Remove="Views\CustomerDetailPage.xaml" />
-    <None Remove="Views\CustomerListPage.xaml" />
     <None Remove="Views\OrderDetailPage.xaml" />
     <None Remove="Views\OrderListPage.xaml" />
+    <None Remove="Views\ProductDetailPage.xaml" />
+    <None Remove="Views\ProductListPage.xaml" />
     <None Remove="Views\SaveChangesDialog.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
   </ItemGroup>
@@ -77,13 +77,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.4" />
-    <PackageReference Include="Microsoft.Graph" Version="4.25.0" />
-    <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.20.1" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Graph" Version="4.49.0" />
+    <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.25.3" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -97,6 +102,11 @@
     <ProjectReference Include="..\ContosoRepository\Decorator.DataAccess.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\Decorator.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="AppShell.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -106,10 +116,10 @@
     <Page Update="UserControls\CollapsibleSearchBox.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\CustomerDetailPage.xaml">
+    <Page Update="Views\ProductDetailPage.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\CustomerListPage.xaml">
+    <Page Update="Views\ProductListPage.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\OrderDetailPage.xaml">
