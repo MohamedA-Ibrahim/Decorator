@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Navigation;
 using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI.Controls;
 using Contoso.App.ViewModels;
+using Decorator.DataAccess;
 
 namespace Contoso.App.Views
 {
@@ -67,7 +68,8 @@ namespace Contoso.App.Views
                     sender.ItemsSource = ViewModel.Products
                         .Where(product => parameters.Any(parameter =>
                             product.Code.StartsWith(parameter) ||
-                            product.Name.StartsWith(parameter))); 
+                            product.Name.StartsWith(parameter)))
+                        .Select(product => $"{product.Code} - {product.Name}"); 
                 }
             }
         }

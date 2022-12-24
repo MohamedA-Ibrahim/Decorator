@@ -35,13 +35,13 @@ namespace Contoso.App.Views
                     IsNewProduct = true,
                     IsInEdit = true
                 };
-                VisualStateManager.GoToState(this, "NewProduct", false);
             }
             else
             {
                 ViewModel = App.ViewModel.Products.Where(product => product.Model.Id == (int)e.Parameter).First();
-
             }
+
+            VisualStateManager.GoToState(this, "ProductDetail", false);
 
             ViewModel.AddNewProductCanceled += AddNewProductCanceled;
             base.OnNavigatedTo(e);
@@ -88,7 +88,7 @@ namespace Contoso.App.Views
                 }
                 else
                 {
-                    sender.ItemsSource = await App.Repository.Products.GetAsync(sender.Text);
+                    sender.ItemsSource = (await App.Repository.Products.GetAsync(sender.Text)).Select(product => $"{product.Code} - {product.Name}");
                 }
             }
         }

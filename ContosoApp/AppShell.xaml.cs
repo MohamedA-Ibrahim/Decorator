@@ -130,13 +130,6 @@ namespace Contoso.App
         }
 
         /// <summary>
-        /// Invoked when the View Code button is clicked. Launches the repo on GitHub. 
-        /// </summary>
-        private async void ViewCodeNavPaneButton_Tapped(object sender, TappedRoutedEventArgs e) =>
-            await Launcher.LaunchUriAsync(new Uri(
-                "https://github.com/Microsoft/Windows-appsample-customers-orders-database"));
-
-        /// <summary>
         /// Navigates the frame to the previous page.
         /// </summary>
         private void NavigationView_BackRequested(muxc.NavigationView sender, muxc.NavigationViewBackRequestedEventArgs args)

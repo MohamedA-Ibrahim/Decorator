@@ -108,8 +108,7 @@
                 </muxc:Expander>
 
 
-                <muxc:Expander x:Name="OrdersExpander"
-                        IsExpanded="True">
+                <muxc:Expander x:Name="OrdersExpander">
 
                     <muxc:Expander.Header>
                         <TextBlock
@@ -186,8 +185,6 @@
                         <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="EmailText.(RelativePanel.AlignLeftWithPanel)" Value="True" />
-                        <Setter Target="EmailText.(RelativePanel.Below)" Value="CompanyText" />
                         <Setter Target="DetailPanel.Margin" Value="12,0,0,0" />
                         <Setter Target="MainCommandBar.DefaultLabelPosition" Value="Bottom"/>
                     </VisualState.Setters>
@@ -196,10 +193,10 @@
             
             
             <VisualStateGroup>
-                <VisualState x:Name="NewProduct">
+                <VisualState x:Name="ProductDetail">
                     <VisualState.Setters>
                         <Setter Target="GeneralExpander.IsExpanded" Value="True"/>
-                        <Setter Target="OrdersExpander.IsExpanded" Value="False"/>
+                        <Setter Target="OrdersExpander.IsExpanded" Value="True"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
