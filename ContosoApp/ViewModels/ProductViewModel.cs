@@ -22,31 +22,59 @@ namespace Contoso.App.ViewModels
             Model = model ?? new Product();
         }
 
-        [ObservableProperty]
+        //[ObservableProperty]
         private Product _model;
 
-        private string _name;
-
-        public string Name
+        public Product Model
         {
-            get => _name;
+            get => _model;
             set
             {
-                if(_isNewProduct && string.IsNullOrEmpty(value))
-                    _name = "New customer";
-                else
-                    _name = value;
+                if (_model != value)
+                {
+                    _model = value;
+                    // Raise the PropertyChanged event for all properties.
+                    OnPropertyChanged(string.Empty);
+                }
             }
         }
 
-      [ObservableProperty]
-      private string _code;
+        public string Name
+        {
+            get => Model.Name;
+            set
+            {
+                if(value != Model.Name) 
+                {
+                    if(_isNewProduct && string.IsNullOrEmpty(value))
+                        Model.Name = "New customer";
+                    else
+                    {
+                        Model.Name = value;
+                        OnPropertyChanged();
+                    }
+                }
+            }
+        }
 
-
+        public string Code
+        {
+            get => Model.Code;
+            set
+            {
+                if (value != Model.Code)
+                {              
+                        Model.Code = value;
+                        OnPropertyChanged();
+                    
+                }
+            }
+        }
         public ObservableCollection<ProductDimension> ProductDimensions { get; } = new ObservableCollection<ProductDimension>();
 
         [ObservableProperty]
         private ProductDimension _selectedProductDimension;
+
 
         [ObservableProperty]
         private bool _isLoading;
@@ -56,6 +84,11 @@ namespace Contoso.App.ViewModels
 
         [ObservableProperty]
         private bool _isInEdit = false;
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the underlying model has been modified. 
+        /// </summary>
+        public bool IsModified { get; set; }
 
         /// <summary>
         /// Saves customer data that has been edited.

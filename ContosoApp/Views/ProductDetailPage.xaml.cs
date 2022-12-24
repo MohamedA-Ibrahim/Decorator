@@ -39,7 +39,8 @@ namespace Contoso.App.Views
             }
             else
             {
-                ViewModel = App.ViewModel.Products.Where(product => product.Model.Id == (Guid)e.Parameter).First();
+                ViewModel = App.ViewModel.Products.Where(product => product.Model.Id == (int)e.Parameter).First();
+
             }
 
             ViewModel.AddNewProductCanceled += AddNewProductCanceled;

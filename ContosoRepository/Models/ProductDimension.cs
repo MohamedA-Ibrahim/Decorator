@@ -6,7 +6,7 @@ namespace Decorator.DataAccess;
 public class ProductDimension : DbObject
 {
     public Product Product { get; set; }
-    public Guid ProductId { get; set; }
+    public int ProductId { get; set; }
     public float DimensionX { get; set; }
     public float DimensionY { get; set; }
     public int Quantity { get; set; }

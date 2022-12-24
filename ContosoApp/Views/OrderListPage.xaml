@@ -200,7 +200,7 @@
                                     </DataTemplate>
                                 </toolkit:DataGridTemplateColumn.CellTemplate>
                             </toolkit:DataGridTemplateColumn>
-                            
+
                             <toolkit:DataGridTemplateColumn
                                     Header="Total"
                                     Tag="GrandTotal">
@@ -213,9 +213,6 @@
                                     </DataTemplate>
                                 </toolkit:DataGridTemplateColumn.CellTemplate>
                             </toolkit:DataGridTemplateColumn>
-                            <toolkit:DataGridTextColumn
-                                    Header="Status"
-                                    Binding="{Binding Status}"/>
                         </toolkit:DataGrid.Columns>
                         
                     </toolkit:DataGrid>

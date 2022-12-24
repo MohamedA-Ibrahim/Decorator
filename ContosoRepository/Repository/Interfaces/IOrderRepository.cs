@@ -9,11 +9,11 @@ public interface IOrderRepository
 {
     Task<IEnumerable<Order>> GetAsync();
 
-    Task<Order> GetAsync(Guid orderId);
+    Task<Order> GetAsync(int orderId);
 
     Task<IEnumerable<Order>> GetAsync(string search);
 
     Task<Order> UpsertAsync(Order order);
 
-    Task DeleteAsync(Guid orderId);
+    Task DeleteAsync(int orderId);
 }

@@ -9,7 +9,7 @@ public interface IProductRepository
 {
     Task<IEnumerable<Product>> GetAsync();
 
-    Task<Product> GetAsync(Guid id);
+    Task<Product> GetAsync(int id);
 
     Task<IEnumerable<Product>> GetAsync(string search);
 

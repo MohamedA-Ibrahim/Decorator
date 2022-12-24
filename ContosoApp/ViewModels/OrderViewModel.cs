@@ -31,14 +31,14 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Creates an OrderViewModel that wraps an Order object created from the specified ID.
         /// </summary>
-        public async static Task<OrderViewModel> CreateFromGuid(Guid orderId) => new OrderViewModel(await GetOrder(orderId));
+        public async static Task<OrderViewModel> CreateFromId(int orderId) => new OrderViewModel(await GetOrder(orderId));
 
         public Order Model { get; }
 
         /// <summary>
         /// Returns the order with the specified ID.
         /// </summary>
-        private static async Task<Order> GetOrder(Guid orderId) => await App.Repository.Orders.GetAsync(orderId); 
+        private static async Task<Order> GetOrder(int orderId) => await App.Repository.Orders.GetAsync(orderId); 
 
         public bool CanRefresh => Model != null && IsExistingOrder;
 
@@ -48,7 +48,7 @@ namespace Contoso.App.ViewModels
         public bool CanRevert => Model != null && IsExistingOrder;
 
         [ObservableProperty]
-        private Guid _id;
+        private int _id;
 
         public bool IsExistingOrder => !IsNewOrder;
 

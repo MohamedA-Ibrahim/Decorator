@@ -35,15 +35,16 @@ namespace Contoso.App.ViewModels
                 return;
             }
 
-            await dispatcherQueue.EnqueueAsync((System.Action)(() =>
+            await dispatcherQueue.EnqueueAsync(() =>
             {
                 Products.Clear();
                 foreach (var c in products)
                 {
-                    Products.Add((ProductViewModel)new ViewModels.ProductViewModel(c));
+                    var m = new ProductViewModel(c);
+                    Products.Add(m);
                 }
                 IsLoading = false;
-            }));
+            });
         }
     }
 }

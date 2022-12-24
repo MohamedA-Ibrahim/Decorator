@@ -19,7 +19,7 @@ namespace Decorator.DataAccess
                 .AsNoTracking()
                 .ToListAsync();
 
-        public async Task<Order> GetAsync(Guid id) =>
+        public async Task<Order> GetAsync(int id) =>
             await _db.Orders
                 .Include(order => order.OrderDetails)
                 .ThenInclude(orderDetail => orderDetail.ProductDimension)
@@ -69,7 +69,7 @@ namespace Decorator.DataAccess
             return order;
         }
 
-        public async Task DeleteAsync(Guid orderId)
+        public async Task DeleteAsync(int orderId)
         {
             var match = await _db.Orders.FirstOrDefaultAsync(_order => _order.Id == orderId);
             if (match != null)

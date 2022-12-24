@@ -42,8 +42,8 @@ namespace Contoso.App.Views
         /// <param name="e">Info about the event.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            var guid = (Guid)e.Parameter;
-            var product = App.ViewModel.Products.Where(x => x.Model.Id == guid).FirstOrDefault();
+            var id = (int)e.Parameter;
+            var product = App.ViewModel.Products.Where(x => x.Model.Id == id).FirstOrDefault();
 
             if (product != null)
             {
@@ -53,7 +53,7 @@ namespace Contoso.App.Views
             else
             {
                 // Order is an existing order.
-                var order = await App.Repository.Orders.GetAsync(guid);
+                var order = await App.Repository.Orders.GetAsync(id);
                 ViewModel = new OrderViewModel(order);
             }
 
@@ -65,7 +65,7 @@ namespace Contoso.App.Views
         /// Reloads the order.
         /// </summary>
         private async void RefreshButton_Click(object sender, RoutedEventArgs e) => 
-            ViewModel = await OrderViewModel.CreateFromGuid(ViewModel.Id);
+            ViewModel = await OrderViewModel.CreateFromId(ViewModel.Id);
 
         /// <summary>
         /// Reverts the page.
@@ -86,10 +86,10 @@ namespace Contoso.App.Views
             {
                 case SaveChangesDialogResult.Save:
                     await ViewModel.SaveOrderAsync();
-                    ViewModel = await OrderViewModel.CreateFromGuid(ViewModel.Id);
+                    ViewModel = await OrderViewModel.CreateFromId(ViewModel.Id);
                     break;
                 case SaveChangesDialogResult.DontSave:
-                    ViewModel = await OrderViewModel.CreateFromGuid(ViewModel.Id);
+                    ViewModel = await OrderViewModel.CreateFromId(ViewModel.Id);
                     break;
                 case SaveChangesDialogResult.Cancel:
                     break;

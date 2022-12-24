@@ -94,8 +94,7 @@
                                 Header="Name"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 RelativePanel.AlignLeftWithPanel="True"
-                                Text="{x:Bind ViewModel.Name, Mode=TwoWay}"
-                                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
+                                Text="{x:Bind ViewModel.Name, Mode=TwoWay}"/>
                         <TextBox
                                 x:Name="Code"
                                 MinWidth="120"
@@ -103,40 +102,6 @@
                                 Header="Code"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 RelativePanel.RightOf="Name"
-                                Text="{x:Bind ViewModel.Code, Mode=TwoWay}"
-                                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
-                        <TextBox
-                                x:Name="CompanyText"
-                                Grid.Row="1"
-                                MinWidth="120"
-                                Margin="0,8,16,0"
-                                Header="Code name"
-                                IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                                RelativePanel.AlignLeftWithPanel="True"
-                                RelativePanel.Below="Name"
-                                Text="{x:Bind ViewModel.Code, Mode=TwoWay}" />
-                        <TextBox
-                                x:Name="PhoneNumber"
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                MinWidth="132"
-                                Margin="0,8,16,0"
-                                Header="Primary phone"
-                                InputScope="TelephoneNumber"
-                                IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                                RelativePanel.Below="Name"
-                                RelativePanel.RightOf="CompanyText"
-                                Text="{x:Bind ViewModel.Code, Mode=TwoWay}" />
-                        <TextBox
-                                x:Name="EmailText"
-                                Grid.Column="2"
-                                MinWidth="160"
-                                Margin="0,8,16,0"
-                                Header="Primary email"
-                                InputScope="EmailNameOrAddress"
-                                IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                                RelativePanel.Below="Name"
-                                RelativePanel.RightOf="PhoneNumber"
                                 Text="{x:Bind ViewModel.Code, Mode=TwoWay}" />
                     </RelativePanel>
 
@@ -148,7 +113,7 @@
 
                     <muxc:Expander.Header>
                         <TextBlock
-                                Text="Orders"
+                                Text="Product Dimensions"
                                 Style="{ThemeResource SubtitleTextBlockStyle}"/>
                     </muxc:Expander.Header>
 
@@ -156,92 +121,39 @@
                             Margin="0,4,0,0">
 
                         <toolkit:DataGrid
-                                BorderThickness="0"
                                 CanUserReorderColumns="False"
                                 CanUserResizeColumns="False"
-                                GridLinesVisibility="None"
-                                IsReadOnly="True"
                                 AutoGenerateColumns="False"
-                                ItemsSource="{x:Bind ViewModel.Model.ProductDimensions, Mode=OneWay}"
+                                GridLinesVisibility="None"
+                                SelectionMode="Single"
+                                IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                                BorderThickness="0"
+                                ItemsSource="{x:Bind ViewModel.Model.ProductDimensions}"
                                 SelectedItem="{x:Bind ViewModel.SelectedProductDimension, Mode=TwoWay}">
                             <toolkit:DataGrid.Columns>
-                                <toolkit:DataGridTemplateColumn
-                                        Header="Invoice"
-                                        Tag="InvoiceNumber">
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="models:Order">
-                                            <HyperlinkButton
-                                                    Content="{x:Bind InvoiceNumber}"
-                                                    Margin="12,0"
-                                                    Click="ViewOrderButton_Click"/>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-                                <toolkit:DataGridTemplateColumn
-                                        Header="Placed"
-                                        Tag="DatePlaced">
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="models:Order">
-                                            <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    Margin="12,0"
-                                                    Text="{x:Bind sys:String.Format('\{0:d\}', Subtotal)}"/>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-                                <toolkit:DataGridTemplateColumn
-                                        Header="Filled"
-                                        Tag="DateFilled">
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="models:Order">
-                                            <TextBlock
-                                                    VerticalAlignment="Center"
-                                                    Margin="12,0"
-                                                    Text="{x:Bind sys:String.Format('\{0:d\}', Subtotal)}"/>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-                                <toolkit:DataGridTemplateColumn
-                                        Header="Subtotal">
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="models:Order">
-                                            <TextBlock 
-                                                    VerticalAlignment="Center"
-                                                    Margin="12,0"
-                                                    Text="{x:Bind sys:String.Format('\{0:c\}', Subtotal)}"/>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-                                <toolkit:DataGridTemplateColumn
-                                        Header="Tax">
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="models:Order">
-                                            <TextBlock 
-                                                    VerticalAlignment="Center"
-                                                    Margin="12,0"
-                                                    Text="{x:Bind sys:String.Format('\{0:c\}', Subtotal)}"/>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
-                                <toolkit:DataGridTemplateColumn
-                                        Header="Total"
-                                        Tag="GrandTotal">
-                                    <toolkit:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate x:DataType="models:Order">
-                                            <TextBlock 
-                                                    VerticalAlignment="Center"
-                                                    Margin="12,0"
-                                                    Text="{x:Bind sys:String.Format('\{0:c\}', Subtotal)}"/>
-                                        </DataTemplate>
-                                    </toolkit:DataGridTemplateColumn.CellTemplate>
-                                </toolkit:DataGridTemplateColumn>
                                 <toolkit:DataGridTextColumn
-                                        Header="Status"
-                                        Tag="PaymentStatus"
-                                        Binding="{Binding PaymentStatus}"/>
+                            Header="DimensionX"
+                            Tag="DimensionX"
+                            Binding="{Binding DimensionX}"
+                            CanUserSort="False"/>
+
                                 <toolkit:DataGridTextColumn
-                                        Header="Term"
-                                        Binding="{Binding Term}"/>
+                            Header="DimensionY"
+                            Tag="DimensionY"
+                            Binding="{Binding DimensionY}"
+                            CanUserSort="False"/>
+
+                                <toolkit:DataGridTextColumn
+                            Header="Quantity"
+                            Tag="Quantity"
+                            Binding="{Binding Quantity}"
+                            CanUserSort="False"/>
+
+                                <toolkit:DataGridTextColumn
+                            Header="Price"
+                            Tag="Price"
+                            Binding="{Binding Price}"
+                            CanUserSort="False"/>
                             </toolkit:DataGrid.Columns>
                         </toolkit:DataGrid>
 
