@@ -1,14 +1,12 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using Contoso.App.ViewModels;
+using Contoso.App.Views;
+using Decorator.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
-using Windows.ApplicationModel;
+using System;
+using System.IO;
 using Windows.Globalization;
-using Windows.Storage;
-using Contoso.App.ViewModels;
-using Contoso.App.Views;
-using Decorator.DataAccess;
 
 namespace Contoso.App
 {
@@ -17,7 +15,6 @@ namespace Contoso.App
     /// </summary>
     public partial class App : Application
     {
-
         /// <summary>
         /// Gets main App Window
         /// </summary>
@@ -76,13 +73,18 @@ namespace Contoso.App
         /// </summary>
         public static void UseSqlite()
         {
-            string demoDatabasePath = Package.Current.InstalledLocation.Path + @"\Assets\Decorator.db";
-            string databasePath = ApplicationData.Current.LocalFolder.Path + @"\Decorator.db";
-            if (!File.Exists(databasePath))
+            //Get the appdata directory and create it if not exists
+            string localAppDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Decorator";
+            Directory.CreateDirectory(localAppDataDirectory);
+
+            string localDatabasePath = localAppDataDirectory + @"\Decorator.db";
+            string demoDatabasePath = AppDomain.CurrentDomain.BaseDirectory + @"\Assets\Decorator.db";
+
+            if (!File.Exists(localDatabasePath))
             {
-                File.Copy(demoDatabasePath, databasePath);
+                File.Copy(demoDatabasePath, localDatabasePath);
             }
-            var dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite("Data Source=" + databasePath);
+            var dbOptions = new DbContextOptionsBuilder<ApplicationDbContext>().UseSqlite("Data Source=" + localDatabasePath);
             Repository = new Repository(dbOptions);
         }
 

@@ -11,9 +11,6 @@ using Contoso.App.ViewModels;
 
 namespace Contoso.App.Views
 {
-    /// <summary>
-    /// Displays and edits an order.
-    /// </summary>
     public sealed partial class OrderDetailPage : Page, INotifyPropertyChanged
     {
         public OrderDetailPage() => InitializeComponent();
@@ -42,19 +39,23 @@ namespace Contoso.App.Views
         /// <param name="e">Info about the event.</param>
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            var id = (int)e.Parameter;
-            var product = App.ViewModel.Products.Where(x => x.Model.Id == id).FirstOrDefault();
+            var parameter = (e.Parameter as OrderListToDetailParameter);
 
-            if (product != null)
+            if (e.Parameter == null)
             {
-                // Order is a new order
-                ViewModel = new OrderViewModel(new Order());
+                ViewModel = new OrderViewModel(new Order())
+                {
+                    IsInEdit = true
+                };
             }
             else
             {
                 // Order is an existing order.
-                var order = await App.Repository.Orders.GetAsync(id);
-                ViewModel = new OrderViewModel(order);
+                var order = await App.Repository.Orders.GetAsync(parameter.SelectedOrderId);
+                ViewModel = new OrderViewModel(order)
+                {
+                    IsInEdit = parameter.IsEdit
+                };
             }
 
             base.OnNavigatedTo(e);
@@ -102,9 +103,21 @@ namespace Contoso.App.Views
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             try
-            { 
+            {
+                if (string.IsNullOrWhiteSpace(ViewModel.CustomerName)
+                    || string.IsNullOrWhiteSpace(ViewModel.CustomerPhone)
+                    || ViewModel.OrderDetails.Count == 0)
+                {
+                    ShowErrorMessage();
+                    return;
+                }
+
+
                 await ViewModel.SaveOrderAsync();
+                ShowSuccessMessage();
                 Bindings.Update();
+
+
             }
             catch (OrderSavingException ex)
             {
@@ -117,6 +130,22 @@ namespace Contoso.App.Views
                 dialog.XamlRoot = App.Window.Content.XamlRoot;
                 await dialog.ShowAsync();
             }
+        }
+
+        private void ShowSuccessMessage()
+        {
+            InfoBarControl.Severity = InfoBarSeverity.Success;
+            InfoBarControl.Title = "Success";
+            InfoBarControl.Message = "Order Saved Successfully";
+            InfoBarControl.IsOpen = true;
+        }
+
+        private void ShowErrorMessage()
+        {
+            InfoBarControl.Severity = InfoBarSeverity.Error;
+            InfoBarControl.Title = "Invalid input";
+            InfoBarControl.Message = "Please check your input";
+            InfoBarControl.IsOpen = true;
         }
 
         /// <summary>
@@ -139,8 +168,9 @@ namespace Contoso.App.Views
         {
             if (args.SelectedItem != null)
             {
-                var selectedProduct = args.SelectedItem as Product;
-                ViewModel.NewOrderDetail.ProductDimension.Product = selectedProduct;
+                var selectedProductDimension = args.SelectedItem as ProductDimension;
+                ViewModel.NewOrderDetail.ProductDimension = selectedProductDimension;
+                ViewModel.NewOrderDetail.Price = selectedProductDimension.Price;
             }
         }
 

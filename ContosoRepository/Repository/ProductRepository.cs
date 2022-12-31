@@ -32,6 +32,21 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(product => product.Id == id);
     }
 
+
+    /// <summary>
+    /// Search products by query and include Name and tis dimensions
+    /// </summary>
+    /// <param name="productId"></param>
+    /// <returns></returns>
+    public async Task<IEnumerable<ProductDimension>> GetWithDimensionsAsync(string query)
+    {
+        return await _db.ProductDimensions
+                          .Include(x=> x.Product)
+                          .Where(pd => pd.Product.Code.StartsWith(query) || pd.Product.Name.StartsWith(query))
+                          .OrderBy(x=> x.Product.Code)
+                          .ToListAsync();
+    }
+
     public async Task<Product> UpsertAsync(Product product)
     {
         var existing = await _db.Products.Include(x=> x.ProductDimensions).FirstOrDefaultAsync(p => p.Id == product.Id);
@@ -65,4 +80,26 @@ public class ProductRepository : IProductRepository
         .AsNoTracking()
         .ToListAsync();
     }
+
+    //public async Task<DeleteResult> RemoveProductDimensionAsync(int id)
+    //{
+    //    var match = await _db.ProductDimensions.FindAsync(id);
+    //    if (match == null)
+    //    {
+    //        return DeleteResult.NotExist;
+    //    }
+
+    //    var isproductDimensionInOrder = _db.OrderDetails.Any(x => x.ProductDimensionId == id);
+    //    if (isproductDimensionInOrder)
+    //    {
+    //        return DeleteResult.InOrder;
+    //    }
+
+    //    _db.ProductDimensions.Remove(match);
+    //    await _db.SaveChangesAsync();
+
+    //    return DeleteResult.Success;
+    //}
+
 }
+

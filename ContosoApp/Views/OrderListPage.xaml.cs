@@ -44,7 +44,7 @@ namespace Contoso.App.Views
         /// Opens the order in the order details page for editing. 
         /// </summary>
         private void EditButton_Click(object sender, RoutedEventArgs e) => 
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder.Id);
+            Frame.Navigate(typeof(OrderDetailPage), new OrderListToDetailParameter(ViewModel.SelectedOrder.Id, true));
 
         /// <summary>
         /// Deletes the currently selected order.
@@ -120,7 +120,9 @@ namespace Contoso.App.Views
         {
             if (e.Key == Windows.System.VirtualKey.Space)
             {
-                Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder.Id);
+                Frame.Navigate(
+                    typeof(OrderDetailPage),
+                    new OrderListToDetailParameter(ViewModel.SelectedOrder.Id, false));
             }
         }
 
@@ -134,12 +136,20 @@ namespace Contoso.App.Views
         /// Navigates to the order details page.
         /// </summary>
         private void MenuFlyoutViewDetails_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder.Id, new DrillInNavigationTransitionInfo());
+            Frame.Navigate(
+                typeof(OrderDetailPage),
+                new OrderListToDetailParameter(ViewModel.SelectedOrder.Id, false),
+                new DrillInNavigationTransitionInfo());
 
         /// <summary>
         /// Sorts the data in the DataGrid.
         /// </summary>
         private void DataGrid_Sorting(object sender, DataGridColumnEventArgs e) =>
             (sender as DataGrid).Sort(e.Column, ViewModel.Orders.Sort);
+
+        private void AddOrder_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(OrderDetailPage));
+        }
     }
 }

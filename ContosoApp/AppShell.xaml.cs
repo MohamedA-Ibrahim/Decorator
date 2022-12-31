@@ -29,12 +29,12 @@ namespace Contoso.App
                 NavView.SelectedItem = ProductListMenuItem;
             };
 
-            // Set up custom title bar.
-            App.Window.ExtendsContentIntoTitleBar = true;
-            // Set XAML element as a draggable region.
-            App.Window.SetTitleBar(AppTitleBar);
+            //// Set up custom title bar.
+            //App.Window.ExtendsContentIntoTitleBar = true;
+            //// Set XAML element as a draggable region.
+            //App.Window.SetTitleBar(AppTitleBar);
             
-            AppTitle.Text = Windows.ApplicationModel.Package.Current.DisplayName;
+            //AppTitle.Text = "Decorator";
         }
 
         /// <summary>
@@ -86,9 +86,9 @@ namespace Contoso.App
             }
         }
 
-        public readonly string ProductListLabel = "Product list";
+        public readonly string ProductListLabel = "قائمة المنتجات";
 
-        public readonly string OrderListLabel = "Order list";
+        public readonly string OrderListLabel = "الطلبيات";
 
         /// <summary>
         /// Navigates to the page corresponding to the tapped item.

@@ -18,11 +18,6 @@
                 Text="View details"
                 Icon="OpenFile">
             </MenuFlyoutItem>
-            <MenuFlyoutItem
-                Click="AddOrder_Click"
-                Text="Add order"
-                Icon="Shop">
-            </MenuFlyoutItem>
         </MenuFlyout>
     </Page.Resources>
 
@@ -30,7 +25,7 @@
         <TextBlock
                 x:Name="PageTitle"
                 Style="{StaticResource PageTitleTextBlockStyle}"
-                Text="Products"/>
+                Text="المنتجات"/>
 
         <CommandBar x:Name="MainCommandBar"
                 HorizontalAlignment="Stretch"
@@ -44,12 +39,6 @@
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedProduct), Mode=OneWay}"
                     Label="View details"
                     ToolTipService.ToolTip="View details" />
-            <AppBarButton
-                    Click="AddOrder_Click"
-                    Icon="Shop"
-                    IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedProduct), Mode=OneWay}"
-                    Label="Add order"
-                    ToolTipService.ToolTip="Add order" />
             <AppBarSeparator/>
             <AppBarButton
                     Click="CreateProduct_Click"
@@ -89,14 +78,16 @@
                     ContextFlyout="{StaticResource DataGridContextMenu}">
                 <toolkit:DataGrid.Columns>
                     <toolkit:DataGridTextColumn
-                            Header="Name"
-                            Tag="Name"
-                            Binding="{Binding Name}"
-                            CanUserSort="False"/>
-                    <toolkit:DataGridTextColumn
-                            Header="Code"
+                            Header="الكود"
                             Tag="Code"
                             Binding="{Binding Code}"/>
+                    
+                    <toolkit:DataGridTextColumn
+                            Header="اسم المنتج"
+                            Tag="ProductName"
+                            Binding="{Binding ProductName}"
+                            CanUserSort="False"/>
+
                 </toolkit:DataGrid.Columns>
             </toolkit:DataGrid>
 

@@ -5,19 +5,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:Decorator.DataAccess"
+    xmlns:vm="using:Contoso.App.ViewModels"
+    xmlns:uc="using:Contoso.App.UserControls"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:sys="using:System"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
 
     <Page.Resources>
-
         <Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
             <Setter Property="MinWidth" Value="150" />
         </Style>
-
-        <DataTemplate
-            x:Key="DefaultOrderDetailTemplate"
+        <DataTemplate x:Key="DefaultOrderDetailTemplate"
             x:DataType="models:OrderDetail">
             
             <Grid HorizontalAlignment="Stretch">
@@ -40,7 +39,7 @@
                     Grid.Column="0"
                     Margin="0,0,0,0"
                     Padding="0,0,0,0"
-                    Text="{x:Bind ProductDimension.Product.Name}" />
+                    Text="{x:Bind ProductDimension.ProductFullName}" />
                 <TextBlock
                     Grid.Column="2"
                     Margin="0,0,0,0"
@@ -64,8 +63,9 @@
                     Background="Transparent"
                     BorderThickness="0"
                     Click="RemoveProduct_Click"
-                    Content="&#xE711;"
-                    FontFamily="{ThemeResource SymbolThemeFontFamily}">
+                    Content="&#xE711;"                                               
+                    FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                    Visibility="{Binding Visibility, ElementName=RemoveButtonVisibility}">
                     
                     <Button.Resources>
                         <ResourceDictionary>
@@ -89,6 +89,10 @@
                 
             </Grid>
         </DataTemplate>
+
+        <!-- A dummy button used to enable Binding to properties outside of DataTemplate (using ElementName instead) -->
+        <Button x:Name="RemoveButtonVisibility" Visibility="{x:Bind vm:Converters.VisibleIf(ViewModel.IsInEdit)}"/>
+
     </Page.Resources>
 
         <RelativePanel>
@@ -113,7 +117,9 @@
                     Style="{StaticResource PageTitleTextBlockStyle}"
                     Text="New order"
                     Visibility="{x:Bind ViewModel.IsNewOrder, Mode=OneWay}" />
-            </StackPanel>
+
+                
+        </StackPanel>
 
             <CommandBar
                 x:Name="MainCommandBar"
@@ -125,6 +131,7 @@
                 <AppBarButton
                     x:Name="SaveOrderButton"
                     Click="SaveButton_Click"
+                    IsEnabled="{x:Bind ViewModel.IsModified, Mode=OneWay}"
                     Icon="Save"
                     Label="Save" />
                 <AppBarButton
@@ -166,37 +173,41 @@
 
 
                     <!--  Customer info section  -->
-                    <StackPanel
+                <StackPanel
                         x:Name="customerInfoPanel"
                         Margin="0,20,0,0">
-                        <TextBlock
-                            IsTextSelectionEnabled="True"
-                            Style="{StaticResource SubtitleTextBlockStyle}"
-                            Text="{x:Bind ViewModel.CustomerName, Mode=OneWay}" />
-                        <TextBlock
-                            Margin="0,0,0,0"
-                            IsTextSelectionEnabled="True"
-                            Text="{x:Bind ViewModel.CustomerAddress, Mode=OneWay}"
-                            TextWrapping="Wrap" />
-                        <TextBlock
-                            IsTextSelectionEnabled="True"
-                            Text="{x:Bind ViewModel.CustomerPhone, Mode=OneWay}" />
-                        <TextBlock
-                            Margin="0,20,0,0"
-                            FontWeight="SemiBold">
-                            Shipping address
-                        </TextBlock>
-                        <TextBlock
-                            Text="{x:Bind ViewModel.CustomerAddress, Mode=OneWay}"
-                            Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay}" />
-                        <TextBox
+
+                    <TextBlock Margin="0,20,0,2"
+                               FontWeight="SemiBold"
+                               Text="Customer Name" />
+                    <TextBox
+                             Text="{x:Bind ViewModel.CustomerName, Mode=TwoWay}"
+                             IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
+
+                    <TextBlock Margin="0,20,0,2"
+                               FontWeight="SemiBold"
+                               Text="Phone"/>
+                    
+                    <TextBox
+                            Width="300"
+                            AcceptsReturn="True"
+                            Text="{x:Bind ViewModel.CustomerPhone, Mode=TwoWay}"
+                            IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
+
+                    <TextBlock
+                            Margin="0,20,0,2"
+                            FontWeight="SemiBold"
+                            Text="Shipping address"/>
+
+                    <TextBox
                             x:Name="ShippingAddressTextBox"
                             Width="300"
                             AcceptsReturn="True"
-                            InputScope="Maps"
+                            IsSpellCheckEnabled="False"
                             Text="{x:Bind ViewModel.CustomerAddress, Mode=TwoWay}"
-                            Visibility="{x:Bind ViewModel.IsNewOrder, Mode=OneWay}" />
-                    </StackPanel>
+                            IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
+
+                </StackPanel>
 
                     <!--  Order status and payment info section  -->
                     <StackPanel
@@ -206,13 +217,14 @@
                         Margin="20,20,0,0"
                         HorizontalAlignment="Right">
 
-                        <Grid>
+
+                        
+                    <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
@@ -220,26 +232,14 @@
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 Margin="0,0,10,0"
-                                FontWeight="Normal">
+                                FontWeight="SemiBold">
                                 Placed:
                         </TextBlock>
                         <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.PurchaseDate), Mode=OneWay}" />
-                            
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Margin="0,0,10,0"
-                                FontWeight="Normal">
-                                Filled:
-                            </TextBlock>
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.PurchaseDate), Mode=OneWay}" />
-                        </Grid>
+                    </Grid>
 
 
                     </StackPanel>
@@ -323,41 +323,43 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <AutoSuggestBox
+                        <AutoSuggestBox 
                                 x:Name="ProductSearchBox"
                                 Grid.Column="0"
                                 MinWidth="200"
-                                ItemsSource="{x:Bind ViewModel.ProductSuggestions, Mode=OneWay}"
                                 PlaceholderText="Enter a product..."
+                                TextMemberPath="ProductFullName"
+                                ItemsSource="{x:Bind ViewModel.ProductSuggestions, Mode=OneWay}"
+                                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
                                 SuggestionChosen="ProductSearchBox_SuggestionChosen"
                                 TextChanged="ProductSearchBox_TextChanged">
-                                <AutoSuggestBox.ItemTemplate>
-                                    <DataTemplate x:DataType="models:Product">
-
+                                
+                                <!-- Search box design-->
+                            <AutoSuggestBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:ProductDimension">
                                         <Grid HorizontalAlignment="Stretch">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
-                                                <RowDefinition />
-                                                <RowDefinition />
-                                            </Grid.RowDefinitions>
-                                            <TextBlock
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock
                                                 Grid.Column="0"
-                                                Grid.ColumnSpan="3"
-                                                Margin="0,0,8,0"
+                                            
+                                                Margin="0,0,5,0"
                                                 Padding="0"
                                                 HorizontalAlignment="Stretch"
-                                                Text="{x:Bind Name}" />
-                                            <TextBlock
-                                                Grid.Row="1"
-                                                Grid.Column="2"
-                                                Margin="8,0,8,8"
+                                                Text="{x:Bind ProductFullName}"/>
+                                        <TextBlock
+                                                Grid.Column="1"
+                                                Margin="0,0,5,0"
+                                                Padding="0"
                                                 HorizontalAlignment="Right"
-                                                Text="ghg" />
-                                        </Grid>
+                                                Text="{x:Bind sys:String.Format('\{0:c\}', Price)}"/>
+                                    </Grid>
+                                    
                                     </DataTemplate>
                                 </AutoSuggestBox.ItemTemplate>
                                 <AutoSuggestBox.ItemContainerStyle>
@@ -366,11 +368,11 @@
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                     </Style>
                                 </AutoSuggestBox.ItemContainerStyle>
-                            </AutoSuggestBox>                                     
-                            <Grid
-                                x:Name="ItemQtyPanel"
+                            </AutoSuggestBox>  
+                            
+                            <Grid x:Name="ItemQtyPanel"
                                 Grid.Column="2"
-                                Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay}">
+                                Visibility="{x:Bind ViewModel.HasNewOrderDetail, Mode=OneWay}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="80" />
                                     <ColumnDefinition Width="80" />
@@ -383,6 +385,7 @@
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Minimum="1"
+                                    Maximum="{x:Bind ViewModel.NewOrderDetail.ProductDimension.Quantity}"
                                     LargeChange="5"
                                     SpinButtonPlacementMode="Compact"
                                     Text="{x:Bind ViewModel.NewOrderDetail.Quantity, Mode=TwoWay}"/>
@@ -406,7 +409,7 @@
                                     Content="&#xE73E;"
                                     FontFamily="{ThemeResource SymbolThemeFontFamily}"
 
-                                    Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay}">
+                                    Visibility="{x:Bind ViewModel.HasNewOrderDetail, Mode=OneWay}">
                                 <Button.Resources>
                                     <ResourceDictionary>
                                         <ResourceDictionary.ThemeDictionaries>
@@ -438,7 +441,7 @@
                                     Click="CancelProductButton_Click"
                                     Content="&#xE711;"
                                     FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                                    Visibility="{x:Bind ViewModel.HasNewLineItem, Mode=OneWay}">
+                                    Visibility="{x:Bind ViewModel.HasNewOrderDetail, Mode=OneWay}">
                                 <Button.Resources>
                                     <ResourceDictionary>
                                         <ResourceDictionary.ThemeDictionaries>
@@ -461,7 +464,6 @@
                         </Grid>
                         </Grid>
 
-                        <!--  Subtotal, tax, and grand total section  -->
                         <Grid
                             x:Name="totalsPanel"
                             Margin="0,20,64,0">
@@ -476,68 +478,35 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <TextBlock
-                                Grid.Column="1"
-                                Margin="0,0,20,0"
-                                Padding="0,0,0,0"
-                                HorizontalAlignment="Right"
-                                Text="SubTotal" />
-                            <TextBlock
-                                Grid.Column="2"
-                                Margin="0,0,0,0"
-                                Padding="0,0,0,0"
-                                HorizontalAlignment="Right"
-                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.Subtotal), Mode=OneWay}" />
                             <Border
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,1" />
+                            <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="1"
-                                Grid.ColumnSpan="2"
-                                BorderBrush="LightGray"
-                                BorderThickness="0,0,0,1" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Margin="0,0,0,0"
-                                Padding="0,0,0,0"
-                                Text="Tax" />
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="2"
-                                Margin="0,0,0,0"
-                                Padding="0,0,0,0"
-                                HorizontalAlignment="Right"
-                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.Subtotal), Mode=OneWay}" />
-                            <Border
-                                Grid.Row="3"
-                                Grid.Column="1"
-                                Grid.ColumnSpan="2"
-                                BorderBrush="LightGray"
-                                BorderThickness="0,0,0,1" />
-                            <TextBlock
-                                Grid.Row="4"
-                                Grid.Column="1"
-                                Margin="0,0,0,0"
+                                Margin="0,0,20,0"
                                 Padding="0,0,0,0"
                                 FontWeight="Bold"
                                 Text="Total" />
                             <TextBlock
-                                Grid.Row="4"
+                                Grid.Row="1"
                                 Grid.Column="2"
                                 Margin="0,0,0,0"
                                 Padding="0,0,0,0"
                                 HorizontalAlignment="Right"
                                 FontWeight="Bold"
-                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.Subtotal), Mode=OneWay}" />
+                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.TotalPrice), Mode=OneWay}" />
                         </Grid>
                     </StackPanel>
 
                 </Grid>
 
+                    
             </ScrollViewer>
 
             <!--  This progress indicator should be hidden when the data is finished loading.  -->
@@ -549,7 +518,13 @@
                 RelativePanel.AlignHorizontalCenterWithPanel="True"
                 RelativePanel.AlignVerticalCenterWithPanel="True"
                 Visibility="{x:Bind ViewModel.IsNotLoaded, Mode=OneWay}" />
-        
+
+
+            <uc:AutoClosingInfoBar x:Name="InfoBarControl"
+                     Margin="0 0 5 20"
+                     RelativePanel.AlignRightWithPanel="True"
+                     RelativePanel.AlignBottomWithPanel="True"/>
+                
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>
@@ -566,10 +541,6 @@
                         <Setter Target="StatusPanel.(Grid.Row)" Value="1" />
                         <Setter Target="StatusPanel.(Grid.RowSpan)" Value="1" />
                         <Setter Target="StatusPanel.(Grid.Column)" Value="0" />
-                        <Setter Target="StatusPanel.HorizontalAlignment" Value="Left" />
-                        <Setter Target="OrderStatus.HorizontalAlignment" Value="Left" />
-                        <Setter Target="PaymentTerm.HorizontalAlignment" Value="Left" />
-                        <Setter Target="PaymentStatus.HorizontalAlignment" Value="Left" />
                         <Setter Target="totalsPanel.HorizontalAlignment" Value="Right" />
                         <Setter Target="SpacerColumn.Width" Value="0" />
                         <Setter Target="customerInfoPanel.Margin" Value="12,20,0,0" />

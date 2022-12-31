@@ -10,26 +10,14 @@
         <StackPanel>
 
             <TextBlock x:Name="PageTitle"
+                       x:Uid="Settings"
                 Style="{StaticResource PageTitleTextBlockStyle}"
                 Text="Settings" />
 
-            <muxc:RadioButtons Header="Data source" SelectedIndex="2">
-                <RadioButton  x:Name="SqliteRadio" Tag="Sqlite">Sqlite (Local)</RadioButton>
-                <RadioButton x:Name="RestRadio" Tag="Rest">REST (Azure)</RadioButton>
+            <muxc:RadioButtons Header="Language" SelectedIndex="1">
+                <RadioButton Checked="OnLanguageChanged" x:Name="ArabicRadio" Tag="Arabic">العربية</RadioButton>
+                <RadioButton Checked="OnLanguageChanged" x:Name="EnglishRadio" Tag="English">English</RadioButton>
             </muxc:RadioButtons>
-            
-            <TextBlock Text="Data is read-only while using REST unless you deploy your own service. See the GitHub repository for details." />
-
-            <HyperlinkButton
-                x:Name="PrivacyButton"
-                Margin="0,25,0,0"
-                Content="Privacy statement" />
-            <HyperlinkButton
-                x:Name="LicenseButton"
-                Content="Additional license terms" />
-            <HyperlinkButton
-                x:Name="GitHubButton"
-                Content="GitHub repository" />
         </StackPanel>
 
         <VisualStateManager.VisualStateGroups>

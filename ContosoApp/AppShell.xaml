@@ -8,16 +8,18 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     KeyDown="AppShell_KeyDown"
     TabNavigation="Cycle"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    FlowDirection="RightToLeft">
     
     <Page.Resources>
         <!--This top margin is the height of the custom TitleBar-->
         <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
     </Page.Resources>
     
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot"
+          FlowDirection="RightToLeft">
         
-        <Border x:Name="AppTitleBar"
+        <!--<Border x:Name="AppTitleBar"
                 IsHitTestVisible="True"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Left"
@@ -31,7 +33,7 @@
                 <Border Background="{ThemeResource SystemAccentColor}" 
                         HorizontalAlignment="Left" 
                         Width="20" Height="20" >
-                    <Image Source="Assets/Square44x44Logo.png"/>
+                    <Image Source="Assets/Decorator.jpg"/>
                 </Border>
                 
                 <TextBlock x:Name="AppTitle"
@@ -40,7 +42,7 @@
                     Style="{StaticResource CaptionTextBlockStyle}" />
             </StackPanel>
             
-        </Border>
+        </Border>-->
         
         <!-- The Navigation View-->
         <muxc:NavigationView
@@ -49,7 +51,7 @@
             IsSettingsVisible="True"
             ItemInvoked="NavigationView_ItemInvoked"
             BackRequested="NavigationView_BackRequested"
-            IsBackEnabled="{x:Bind AppFrame.CanGoBack, Mode=OneWay}"
+            IsBackButtonVisible="Collapsed"
             IsTitleBarAutoPaddingEnabled="False">
 
             <muxc:NavigationView.MenuItems>

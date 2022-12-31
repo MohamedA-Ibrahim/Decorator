@@ -9,6 +9,7 @@ using Microsoft.UI.Dispatching;
 using CommunityToolkit.WinUI;
 using Decorator.DataAccess;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Contoso.App.ViewModels
 {
@@ -45,17 +46,66 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Gets a value that specifies whether the user can revert changes. 
         /// </summary>
-        public bool CanRevert => Model != null && IsExistingOrder;
+        public bool CanRevert => Model != null && IsModified && IsExistingOrder;
 
-        [ObservableProperty]
-        private int _id;
+        private bool _isInEdit = false;
+
+        public bool IsInEdit
+        {
+            get => _isInEdit;
+            set
+            {
+                if (value != _isInEdit)
+                {              
+                        _isInEdit = value;
+                        OnPropertyChanged();
+                }
+            }
+        }
+        public int Id
+        {
+            get => Model.Id;
+            set
+            {
+                if (Model.Id != value)
+                {
+                    Model.Id = value;
+                    OnPropertyChanged();
+                    IsModified = true;
+                }
+            }
+        }
+
+        private bool _IsModified = false;
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the underlying model has been modified. 
+        /// </summary>
+        public bool IsModified
+        {
+            get => _IsModified;
+            set
+            {
+                if (value != _IsModified)
+                {
+                    // Only record changes after the order has loaded. 
+                    if (IsLoaded)
+                    {
+                        _IsModified = value;
+                        OnPropertyChanged();
+                        OnPropertyChanged(nameof(CanRevert));
+                    }
+                }
+            }
+        }
+
 
         public bool IsExistingOrder => !IsNewOrder;
 
         /// <summary>
         /// Gets a value that indicates whether there is a backing order.
         /// </summary>
-        public bool IsLoaded => Model != null && (IsNewOrder);
+        public bool IsLoaded => Model != null && (IsNewOrder || Model.CustomerName != null);
 
         /// <summary>
         /// Gets a value that indicates whether there is not a backing order.
@@ -70,11 +120,24 @@ namespace Contoso.App.ViewModels
         /// <summary>
         /// Gets or sets the invoice number for this order. 
         /// </summary>
-        /// 
-
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(IsNewOrder), nameof(IsLoaded), nameof(IsNotLoaded), nameof(IsExistingOrder))]
-        private int _invoiceNumber;
+        public int InvoiceNumber
+        {
+            get => Model.InvoiceNumber;
+            set
+            {
+                if (Model.InvoiceNumber != value)
+                {
+                    Model.InvoiceNumber = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(IsNewOrder));
+                    OnPropertyChanged(nameof(IsLoaded));
+                    OnPropertyChanged(nameof(IsNotLoaded));
+                    OnPropertyChanged(nameof(IsNewOrder));
+                    OnPropertyChanged(nameof(IsExistingOrder));
+                    IsModified = true;
+                }
+            }
+        }
 
         private ObservableCollection<OrderDetail> _orderDetails;
         
@@ -99,6 +162,8 @@ namespace Contoso.App.ViewModels
                     }
                     _orderDetails = value;
                     OnPropertyChanged();
+                    IsModified = true;
+
                 }
             }
         }
@@ -114,7 +179,11 @@ namespace Contoso.App.ViewModels
             }
 
             OnPropertyChanged(nameof(OrderDetails));
+            OnPropertyChanged(nameof(TotalPrice));
+            IsModified = true;
+
         }
+
 
         private OrderDetailViewModel _newOrderDetail;
 
@@ -149,41 +218,85 @@ namespace Contoso.App.ViewModels
         private void UpdateNewOrderDetailBindings()
         {
             OnPropertyChanged(nameof(NewOrderDetail));
-            OnPropertyChanged(nameof(HasNewLineItem));
+            OnPropertyChanged(nameof(HasNewOrderDetail));
             OnPropertyChanged(nameof(NewOrderDetailProductListPriceFormatted));
         }
 
         /// <summary>
         /// Gets or sets whether there is a new order detail in progress.
         /// </summary>
-        public bool HasNewLineItem => NewOrderDetail != null && NewOrderDetail.ProductDimension != null;
+        public bool HasNewOrderDetail => NewOrderDetail != null && NewOrderDetail.ProductDimension != null;
 
         /// <summary>
         /// Gets the product list price of the new line item, formatted for display.
         /// </summary>
         public string NewOrderDetailProductListPriceFormatted => (NewOrderDetail?.ProductDimension?.Price ?? 0).ToString("c");
 
-        [ObservableProperty]
-        private DateTime _purchaseDate;
+        public DateTime PurchaseDate
+        {
+            get => Model.PurchaseDate;
+            set
+            {
+                if (Model.PurchaseDate != value)
+                {
+                    Model.PurchaseDate = value;
+                    OnPropertyChanged();
+                    IsModified = true;
+                }
+            }
+        }
 
+        public string CustomerAddress
+        {
+            get => Model.CustomerAddress;
+            set
+            {
+                if (Model.CustomerAddress != value)
+                {
+                    Model.CustomerAddress = value;
+                    OnPropertyChanged();
+                    IsModified = true;
+                }
+            }
+        }
+
+        public string CustomerName
+        {
+            get => Model.CustomerName;
+            set
+            {
+                if (Model.CustomerName != value)
+                {
+                    Model.CustomerName = value;
+                    OnPropertyChanged();
+                    IsModified = true;
+                }
+            }
+        }
+
+        public string CustomerPhone
+        {
+            get => Model.CustomerPhone;
+            set
+            {
+                if (Model.CustomerPhone != value)
+                {
+                    Model.CustomerPhone = value;
+                    OnPropertyChanged();
+                    IsModified = true;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the subtotal. This value is calculated automatically. 
         /// </summary>
-        public decimal Subtotal => Model.Subtotal;
-
-        [ObservableProperty]
-        private string _customerName;
-
-        [ObservableProperty]
-        private string _customerAddress;
-
-        [ObservableProperty]
-        private string _customerPhone;
+        public float TotalPrice => Model.TotalPrice;
 
 
         public async Task SaveOrderAsync()
         {
+
             Order result = null;
             try
             {
@@ -194,12 +307,26 @@ namespace Contoso.App.ViewModels
                 throw new OrderSavingException("Unable to save. There might have been a problem " +
                     "connecting to the database. Please try again.", ex);
             }
+            if (result != null)
+            {
+                await dispatcherQueue.EnqueueAsync(() =>
+                {
+                    IsInEdit = false;
+                    IsModified = false;
+                });
+            }
+            else
+            {
+                await dispatcherQueue.EnqueueAsync(() => new OrderSavingException(
+                    "Unable to save. There might have been a problem " +
+                    "connecting to the database. Please try again."));
+            }
         }
 
         /// <summary>
         /// Stores the product suggestions. 
         /// </summary>
-        public ObservableCollection<Product> ProductSuggestions { get; } = new ObservableCollection<Product>();
+        public ObservableCollection<ProductDimension> ProductSuggestions { get; } = new ();
 
         /// <summary>
         /// Queries the database and updates the list of new product suggestions. 
@@ -210,9 +337,9 @@ namespace Contoso.App.ViewModels
 
             if (!string.IsNullOrEmpty(queryText))
             {
-                var suggestions = await App.Repository.Products.GetAsync(queryText);
+                var suggestions = await App.Repository.Products.GetWithDimensionsAsync(queryText);
 
-                foreach (Product p in suggestions)
+                foreach (ProductDimension p in suggestions)
                 {
                     ProductSuggestions.Add(p);
                 }

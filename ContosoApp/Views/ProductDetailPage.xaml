@@ -17,7 +17,7 @@
         <TextBlock
                 x:Name="PageTitle"
                 Style="{StaticResource PageTitleTextBlockStyle}"
-                Text="{x:Bind ViewModel.Name, Mode=OneWay}" />
+                Text="{x:Bind ViewModel.ProductName, Mode=OneWay}" />
 
         <CommandBar
                 x:Name="MainCommandBar"
@@ -43,11 +43,6 @@
                     IsEnabled="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                     Visibility="{x:Bind vm:Converters.CollapsedIf(ViewModel.IsNewProduct), Mode=OneWay}"
                     Label="Edit" />
-            <AppBarButton
-                    Click="AddOrder_Click"
-                    Icon="Shop"
-                    Label="Add order"
-                    Visibility="{x:Bind vm:Converters.CollapsedIf(ViewModel.IsNewProduct), Mode=OneWay}"/>
 
         </CommandBar>
 
@@ -88,20 +83,20 @@
 
                     <RelativePanel Margin="8,0,0,12">
                         <TextBox
-                                x:Name="Name"
+                                x:Name="ProductName"
                                 MinWidth="120"
                                 Margin="0,8,16,8"
                                 Header="Name"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 RelativePanel.AlignLeftWithPanel="True"
-                                Text="{x:Bind ViewModel.Name, Mode=TwoWay}"/>
+                                Text="{x:Bind ViewModel.ProductName, Mode=TwoWay}"/>
                         <TextBox
                                 x:Name="Code"
                                 MinWidth="120"
                                 Margin="0,8,16,8"
                                 Header="Code"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                                RelativePanel.RightOf="Name"
+                                RelativePanel.RightOf="ProductName"
                                 Text="{x:Bind ViewModel.Code, Mode=TwoWay}" />
                     </RelativePanel>
 
@@ -116,43 +111,79 @@
                                 Style="{ThemeResource SubtitleTextBlockStyle}"/>
                     </muxc:Expander.Header>
 
-                    <Grid
-                            Margin="0,4,0,0">
+                    <StackPanel Margin="0,4,0,0">
 
                         <toolkit:DataGrid
+                                x:Name="ProductDimensionsGrid"
                                 CanUserReorderColumns="False"
                                 CanUserResizeColumns="False"
                                 AutoGenerateColumns="False"
                                 GridLinesVisibility="None"
                                 SelectionMode="Single"
-                                IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 BorderThickness="0"
-                                ItemsSource="{x:Bind ViewModel.Model.ProductDimensions}"
+                                PreparingCellForEdit="ProductDimensionsGrid_PreparingCellForEdit"
+                                IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                                ItemsSource="{x:Bind ViewModel.ProductDimensions, Mode=OneWay}"
                                 SelectedItem="{x:Bind ViewModel.SelectedProductDimension, Mode=TwoWay}">
+
                             <toolkit:DataGrid.Columns>
                                 <toolkit:DataGridTextColumn
-                            Header="DimensionX"
-                            Tag="DimensionX"
-                            Binding="{Binding DimensionX}"
-                            CanUserSort="False"/>
+                                            Header="DimensionX"
+                                            Tag="DimensionX"
+                                            Binding="{Binding DimensionX}"
+                                            CanUserSort="False"/>
 
                                 <toolkit:DataGridTextColumn
-                            Header="DimensionY"
-                            Tag="DimensionY"
-                            Binding="{Binding DimensionY}"
-                            CanUserSort="False"/>
+                                            Header="DimensionY"
+                                            Tag="DimensionY"
+                                            Binding="{Binding DimensionY}"
+                                            CanUserSort="False"/>
 
                                 <toolkit:DataGridTextColumn
-                            Header="Quantity"
-                            Tag="Quantity"
-                            Binding="{Binding Quantity}"
-                            CanUserSort="False"/>
+                                            Header="Quantity"
+                                            Tag="Quantity"
+                                            Binding="{Binding Quantity}"
+                                            CanUserSort="False"/>
 
                                 <toolkit:DataGridTextColumn
-                            Header="Price"
-                            Tag="Price"
-                            Binding="{Binding Price}"
-                            CanUserSort="False"/>
+                                            Header="Price"
+                                            Tag="Price"
+                                            Binding="{Binding Price}"
+                                            CanUserSort="False"/>
+
+                                <toolkit:DataGridTemplateColumn Header=""
+                                                                Visibility="{x:Bind ViewModel.IsInEdit,Mode=OneWay}">
+                                    <toolkit:DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                x:Name="DeleteButton"
+                                                Click="DeleteButton_Click"
+                                                Content="&#xE711;"                                               
+                                                FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                                                BorderThickness="0"
+                                                Background="Transparent">
+                                                <Button.Resources>
+                                                    <ResourceDictionary>
+                                                        <ResourceDictionary.ThemeDictionaries>
+                                                            <ResourceDictionary x:Key="Default">
+                                                                <SolidColorBrush x:Key="ButtonForeground"
+                                                                        Color="Red"/>
+                                                                <SolidColorBrush x:Key="ButtonForegroundPointerOver"
+                                                                        Color="DarkRed"/>
+                                                            </ResourceDictionary>
+                                                            <ResourceDictionary x:Key="Dark">
+                                                                <SolidColorBrush x:Key="ButtonForeground"
+                                                                        Color="Red"/>
+                                                                <SolidColorBrush x:Key="ButtonForegroundPointerOver"
+                                                                        Color="#AAFF0000"/>
+                                                            </ResourceDictionary>
+                                                        </ResourceDictionary.ThemeDictionaries>
+                                                    </ResourceDictionary>
+                                                </Button.Resources>
+                                            </Button>
+                                        </DataTemplate>
+                                    </toolkit:DataGridTemplateColumn.CellTemplate>
+                                </toolkit:DataGridTemplateColumn>
                             </toolkit:DataGrid.Columns>
                         </toolkit:DataGrid>
 
@@ -163,8 +194,17 @@
                                 IsIndeterminate="True"
                                 Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
-                    </Grid>
+
+                        <Button Content="Add New Row"
+                                Margin="0 10 0 0"
+                                HorizontalAlignment="Right"
+                                Click="AddNewRow_Click"
+                                Visibility="{x:Bind ViewModel.IsInEdit}">
+
+                        </Button>
+                    </StackPanel>
                 </muxc:Expander>
+
             </StackPanel>
         </ScrollViewer>
 
@@ -190,8 +230,8 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-            
-            
+
+
             <VisualStateGroup>
                 <VisualState x:Name="ProductDetail">
                     <VisualState.Setters>

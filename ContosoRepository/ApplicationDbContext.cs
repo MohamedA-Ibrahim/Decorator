@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Options;
+using System;
+using System.Diagnostics;
 
 namespace Decorator.DataAccess
 {
@@ -14,6 +16,10 @@ namespace Decorator.DataAccess
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<ProductDimension> ProductDimensions { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => 
+                                     optionsBuilder.EnableSensitiveDataLogging()
+                                     .LogTo(message => Debug.WriteLine(message));
     }
 
 }

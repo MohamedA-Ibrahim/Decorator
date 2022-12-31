@@ -76,6 +76,7 @@
                 RelativePanel.RightOf="PageTitle">
             <AppBarButton
                     x:Name="CommandBarEditButton"
+                
                     Click="EditButton_Click"
                     Icon="Edit"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
@@ -90,6 +91,14 @@
                     Click="{x:Bind ViewModel.LoadOrders}"
                     Icon="Refresh"
                     Label="Refresh" />
+
+            <AppBarSeparator/>
+
+            <AppBarButton
+                    Click="AddOrder_Click"
+                    Icon="Shop"                   
+                    Label="Add order"
+                    ToolTipService.ToolTip="Add order" />
         </CommandBar>
         
         <!-- Search box -->
@@ -150,7 +159,7 @@
                                 Text="{x:Bind ViewModel.SelectedOrder.CustomerPhone, Mode=OneWay}" />
                     </StackPanel>
 
-                    <TextBlock FontWeight="SemiBold">Shipping address</TextBlock>
+                    <TextBlock FontWeight="SemiBold">Address</TextBlock>
                     <TextBlock Text="{x:Bind ViewModel.SelectedOrder.CustomerAddress, Mode=OneWay}" />
                 </StackPanel>
             </SplitView.Pane>
@@ -209,7 +218,7 @@
                                         <TextBlock 
                                                 VerticalAlignment="Center"
                                                 Margin="12,0"
-                                                Text="{x:Bind sys:String.Format('\{0:c\}', Subtotal)}"/>
+                                                Text="{x:Bind sys:String.Format('\{0:c\}', TotalPrice)}"/>
                                     </DataTemplate>
                                 </toolkit:DataGridTemplateColumn.CellTemplate>
                             </toolkit:DataGridTemplateColumn>

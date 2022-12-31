@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Decorator.DataAccess;
+using System.ComponentModel;
 
 namespace Contoso.App.ViewModels
 {
@@ -12,14 +13,44 @@ namespace Contoso.App.ViewModels
 
         public OrderDetail Model { get; }
 
-        [ObservableProperty]
-        private ProductDimension _productDimension;
 
-        [ObservableProperty]
-        private int _quantity;
+        public ProductDimension ProductDimension
+        {
+            get => Model.ProductDimension;
+            set
+            {
+                if (Model.ProductDimension != value)
+                {
+                    Model.ProductDimension = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
-        [ObservableProperty]
-        private decimal _price;
-        
+        public int Quantity
+        {
+            get => Model.Quantity;
+            set
+            {
+                if (Model.Quantity != value)
+                {
+                    Model.Quantity = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public float Price
+        {
+            get => Model.Price;
+            set
+            {
+                if (Model.Price != value)
+                {
+                    Model.Price = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
     }
 }

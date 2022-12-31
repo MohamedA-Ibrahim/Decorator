@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Decorator.DataAccess;
 
 namespace Decorator.DataAccess;
 
@@ -12,7 +11,8 @@ public interface IProductRepository
     Task<Product> GetAsync(int id);
 
     Task<IEnumerable<Product>> GetAsync(string search);
-
+    Task<IEnumerable<ProductDimension>> GetWithDimensionsAsync(string query);
+    //Task<DeleteResult> RemoveProductDimensionAsync(int id);
     Task<Product> UpsertAsync(Product product);
 
 }

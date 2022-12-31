@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Decorator.DataAccess;
 using Contoso.App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
+using Microsoft.Graph;
 
 namespace Contoso.App.Views
 {
@@ -105,17 +106,43 @@ namespace Contoso.App.Views
             }
         }
 
-        /// <summary>
-        /// Navigates to the order page for the customer.
-        /// </summary>
-        private void ViewOrderButton_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ((sender as FrameworkElement).DataContext as Order).Id,
-                new DrillInNavigationTransitionInfo());
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var pd = (sender as Button).DataContext as ProductDimension;
 
-        /// <summary>
-        /// Adds a new order for the customer.
-        /// </summary>
-        private void AddOrder_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.Model.Id);
+            ViewModel.ProductDimensions.Remove(pd);
+            //var result = await ViewModel.RemoveProductDimension(pd);
+
+            //if(result == DeleteResult.InOrder)
+            //{
+            //    var dialog = new ContentDialog()
+            //    {
+            //        Title = "Unable to delete",
+            //        Content = $"The product dimension is already in order!",
+            //        PrimaryButtonText = "OK"
+            //    };
+            //    dialog.XamlRoot = App.Window.Content.XamlRoot;
+            //    await dialog.ShowAsync();
+            //}
+        }
+
+        private void AddNewRow_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ProductDimensions.Insert(ViewModel.ProductDimensions.Count, new ProductDimension());
+
+            ProductDimensionsGrid.SelectedIndex = ViewModel.ProductDimensions.Count - 1;
+            ProductDimensionsGrid.ScrollIntoView(ProductDimensionsGrid.SelectedItem, null);
+            ProductDimensionsGrid.Focus(FocusState.Keyboard);
+            //ProductDimensionsGrid.CurrentColumn = ProductDimensionsGrid.Columns[0];
+            ProductDimensionsGrid.BeginEdit();
+        }
+
+        private void ProductDimensionsGrid_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
+        {
+            if (e.EditingElement is TextBox t)
+            {
+                t.Focus(FocusState.Keyboard);
+            }
+        }
     }
 }

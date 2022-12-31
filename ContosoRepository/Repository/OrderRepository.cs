@@ -16,6 +16,7 @@ namespace Decorator.DataAccess
             await _db.Orders
                 .Include(order => order.OrderDetails)
                 .ThenInclude(orderDetail => orderDetail.ProductDimension)
+                .ThenInclude(pd => pd.Product)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -23,6 +24,7 @@ namespace Decorator.DataAccess
             await _db.Orders
                 .Include(order => order.OrderDetails)
                 .ThenInclude(orderDetail => orderDetail.ProductDimension)
+                .ThenInclude(pd => pd.Product)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(order => order.Id == id);
 
@@ -59,12 +61,17 @@ namespace Decorator.DataAccess
             if (existing == null)
             {
                 order.InvoiceNumber = _db.Orders.Max(_order => _order.InvoiceNumber) + 1;
-                _db.Orders.Add(order);
+
+                _db.ChangeTracker.TrackGraph(order, node => node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
+
+                //_db.Orders.Add(order);
             }
             else
             {
                 _db.Entry(existing).CurrentValues.SetValues(order);
             }
+
+
             await _db.SaveChangesAsync();
             return order;
         }

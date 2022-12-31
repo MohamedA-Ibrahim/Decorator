@@ -68,8 +68,8 @@ namespace Contoso.App.Views
                     sender.ItemsSource = ViewModel.Products
                         .Where(product => parameters.Any(parameter =>
                             product.Code.StartsWith(parameter) ||
-                            product.Name.StartsWith(parameter)))
-                        .Select(product => $"{product.Code} - {product.Name}"); 
+                            product.ProductName.StartsWith(parameter)))
+                        .Select(product => $"{product.Code} - {product.ProductName}"); 
                 }
             }
         }
@@ -100,10 +100,10 @@ namespace Contoso.App.Views
 
             var matches = ViewModel.Products.Where(product => parameters
                 .Any(parameter =>
-                    product.Name.StartsWith(parameter) ||
+                    product.ProductName.StartsWith(parameter) ||
                     product.Code.StartsWith(parameter)))
                 .OrderByDescending(product => parameters.Count(parameter =>
-                    product.Name.StartsWith(parameter) ||
+                    product.ProductName.StartsWith(parameter) ||
                     product.Code.StartsWith(parameter)))
                 .ToList();
 
@@ -157,12 +157,6 @@ namespace Contoso.App.Views
         /// </summary>
         private void DataGrid_RightTapped(object sender, RightTappedRoutedEventArgs e) =>
             ViewModel.SelectedProduct = (e.OriginalSource as FrameworkElement).DataContext as ProductViewModel;
-
-        /// <summary>
-        /// Opens the order detail page for the user to create an order for the selected customer.
-        /// </summary>
-        private void AddOrder_Click(object sender, RoutedEventArgs e) =>
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedProduct.Model.Id);
 
         /// <summary>
         /// Sorts the data in the DataGrid.

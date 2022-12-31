@@ -10,5 +10,8 @@ public class ProductDimension : DbObject
     public float DimensionX { get; set; }
     public float DimensionY { get; set; }
     public int Quantity { get; set; }
-    public decimal Price { get; set; }
+    public float Price { get; set; }
+
+    public string ProductFullName => $"{Product.Name} - {DimensionX} x {DimensionY}";
+
 }

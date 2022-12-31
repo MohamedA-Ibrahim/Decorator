@@ -16,7 +16,7 @@ namespace Decorator.DataAccess
 
         public DateTime PurchaseDate { get; set; } = DateTime.Now;
 
-        public decimal Subtotal => OrderDetails.Sum(orderDetail => orderDetail.ProductDimension.Price * orderDetail.Quantity);
+        public float TotalPrice => OrderDetails.Sum(orderDetail => orderDetail.ProductDimension.Price * orderDetail.Quantity);
 
         public override string ToString() => InvoiceNumber.ToString();
     }
