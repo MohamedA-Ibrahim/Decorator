@@ -12,6 +12,6 @@ public class ProductDimension : Entity
     public int Quantity { get; set; }
     public float Price { get; set; }
 
-    public string ProductFullName => $"{Product.Name} - {DimensionX} × {DimensionY} م";
+    public string ProductFullName => $"{Product.Name} - {DimensionX} × {DimensionY} سم";
 
 }

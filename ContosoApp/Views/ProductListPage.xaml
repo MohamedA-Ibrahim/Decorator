@@ -18,6 +18,11 @@
                 Text="عرض التفاصيل"
                 Icon="OpenFile">
             </MenuFlyoutItem>
+            <MenuFlyoutItem
+                Click="PrintReport_Click"
+                Text="طباعة جرد المبيعات"
+                Icon="Print">
+            </MenuFlyoutItem>
         </MenuFlyout>
     </Page.Resources>
 

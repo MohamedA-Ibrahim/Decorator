@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -29,6 +30,24 @@ public class ProductRepository : IProductRepository
             .Include(p => p.ProductDimensions)
             .FirstOrDefaultAsync(product => product.Id == id);
     }
+
+
+    public async Task<IEnumerable<ProductOrdersDTO>> GetProductOrdersAsync(int productId, DateTime dateFrom, DateTime dateTo)
+    {
+        return await _db.OrderDetails
+            .Where(x => x.ProductDimension.ProductId == productId)
+            .Where(x => x.Order.PurchaseDate >= dateFrom && x.Order.PurchaseDate <= dateTo)
+            .Select(x => new ProductOrdersDTO()
+            {
+                CustomerName = x.Order.CustomerName,
+                InvoiceNumber = x.Order.InvoiceNumber,
+                PurchaseDate = x.Order.PurchaseDate,
+                Quantity = x.Quantity,
+                Price = x.Price,
+                ProductName = $"{x.ProductDimension.Product.Name} {x.ProductDimension.DimensionX} × {x.ProductDimension.DimensionY} سم"
+            }).ToListAsync();
+    }
+
 
 
     /// <summary>

@@ -23,6 +23,7 @@
     <None Remove="UserControls\CollapsibleSearchBox.xaml" />
     <None Remove="Views\OrderDetailPage.xaml" />
     <None Remove="Views\OrderListPage.xaml" />
+    <None Remove="Views\PrintProductReportDialog .xaml" />
     <None Remove="Views\ProductDetailPage.xaml" />
     <None Remove="Views\ProductListPage.xaml" />
     <None Remove="Views\SaveChangesDialog.xaml" />
@@ -88,6 +89,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\OrderListPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\PrintProductReportDialog .xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SaveChangesDialog.xaml">

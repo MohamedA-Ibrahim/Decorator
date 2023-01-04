@@ -11,6 +11,9 @@ using CommunityToolkit.WinUI;
 using CommunityToolkit.WinUI.UI.Controls;
 using Contoso.App.ViewModels;
 using Decorator.DataAccess;
+using System.Diagnostics;
+using Contoso.App.Reporting;
+using QuestPDF.Fluent;
 
 namespace Contoso.App.Views
 {
@@ -138,6 +141,49 @@ namespace Contoso.App.Views
                 Frame.Navigate(typeof(ProductDetailPage), ViewModel.SelectedProduct.Model.Id,
                     new DrillInNavigationTransitionInfo());
             }
+        }
+
+        private async void PrintReport_Click(object sender, RoutedEventArgs e)
+        {
+            var printDialog = new PrintProductReportDialog()
+            {
+                Title = $"طباعة جرد مبيعات {ViewModel.SelectedProduct.Model.Name}"
+            };
+
+            printDialog.XamlRoot = this.Content.XamlRoot;
+            await printDialog.ShowAsync();
+
+            var result = printDialog.Result;
+
+            switch (result.ButtonClicked)
+            {
+                case ButtonClicked.Print:
+                    await PrintReport(ViewModel.SelectedProduct.Model.Id, result.DateFrom, result.DateTo);
+                    break;
+                case ButtonClicked.Cancel:
+                    break;
+            }
+        }
+
+        private async Task PrintReport(int productId, DateTime dateFrom, DateTime dateTo)
+        {
+            var productSales = await App.Repository.Products.GetProductOrdersAsync(productId, dateFrom, dateTo);
+
+            var document = new ProductSalesDocument(productSales.ToList());
+
+            const string filePath = "invoice.pdf";
+
+            document.GeneratePdf(filePath);
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo(filePath)
+                {
+                    UseShellExecute = true
+                }
+            };
+
+            process.Start();
         }
 
         private void DataGrid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) =>
