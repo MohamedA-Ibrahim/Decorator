@@ -15,7 +15,7 @@
         <MenuFlyout x:Key="DataGridContextMenu">
             <MenuFlyoutItem
                 Click="ViewDetails_Click"
-                Text="View details"
+                Text="عرض التفاصيل"
                 Icon="OpenFile">
             </MenuFlyoutItem>
         </MenuFlyout>
@@ -37,14 +37,14 @@
                     Click="ViewDetails_Click"
                     Icon="Contact"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedProduct), Mode=OneWay}"
-                    Label="View details"
+                    Label="عرض التفاصيل"
                     ToolTipService.ToolTip="View details" />
             <AppBarSeparator/>
             <AppBarButton
                     Click="CreateProduct_Click"
                     Icon="Add"
-                    Label="New"
-                    ToolTipService.ToolTip="New Product" />
+                    Label="اضافة"
+                    ToolTipService.ToolTip="منتج جديد" />
 
         </CommandBar>
 

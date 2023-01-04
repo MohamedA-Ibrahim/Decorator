@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Windows.Networking;
 using System.Linq;
 using System.Collections.Specialized;
+using System.Collections.Generic;
 
 namespace Contoso.App.ViewModels
 {
@@ -21,13 +22,44 @@ namespace Contoso.App.ViewModels
         /// </summary>
         public ProductViewModel(Product model = null)
         {
-            Model = model ?? new Product();
+
+            Model = model ?? new Product(){ ProductDimensions = new List<ProductDimension>()};
 
             ProductDimensions = new ObservableCollection<ProductDimension>(Model.ProductDimensions);
             ProductDimensions.CollectionChanged += ProductDimensions_Changed;
         }
 
-        //[ObservableProperty]
+
+        #region Observable Properties
+
+
+        private ObservableCollection<ProductDimension> _productDimensions;
+
+        public ObservableCollection<ProductDimension> ProductDimensions
+        {
+            get => _productDimensions;
+            set
+            {
+                if (_productDimensions != value)
+                {
+                    if (value != null)
+                    {
+                        value.CollectionChanged += ProductDimensions_Changed;
+                    }
+
+                    if (_productDimensions != null)
+                    {
+                        _productDimensions.CollectionChanged -= ProductDimensions_Changed;
+                    }
+                    _productDimensions = value;
+                    OnPropertyChanged();
+                    IsModified = true;
+
+                }
+            }
+        }
+
+
         private Product _model;
 
         public Product Model
@@ -76,44 +108,6 @@ namespace Contoso.App.ViewModels
             }
         }
 
-        private ObservableCollection<ProductDimension> _productDimensions;
-
-
-        public ObservableCollection<ProductDimension> ProductDimensions
-        {
-            get => _productDimensions;
-            set
-            {
-                if (_productDimensions != value)
-                {
-                    if (value != null)
-                    {
-                        value.CollectionChanged += ProductDimensions_Changed;
-                    }
-
-                    if (_productDimensions != null)
-                    {
-                        _productDimensions.CollectionChanged -= ProductDimensions_Changed;
-                    }
-                    _productDimensions = value;
-                    OnPropertyChanged();
-                    IsModified = true;
-
-                }
-            }
-        }
-
-        private void ProductDimensions_Changed(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (ProductDimensions != null)
-            {
-                Model.ProductDimensions = ProductDimensions.ToList();
-            }
-
-            OnPropertyChanged(nameof(ProductDimensions));
-            IsModified = true;
-
-        }
 
         [ObservableProperty]
         private ProductDimension _selectedProductDimension;
@@ -131,6 +125,20 @@ namespace Contoso.App.ViewModels
         /// Gets or sets a value that indicates whether the underlying model has been modified. 
         /// </summary>
         public bool IsModified { get; set; }
+
+        #endregion
+
+        private void ProductDimensions_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (ProductDimensions != null)
+            {
+                Model.ProductDimensions = ProductDimensions.ToList();
+            }
+
+            OnPropertyChanged(nameof(ProductDimensions));
+            IsModified = true;
+
+        }
 
         /// <summary>
         /// Saves customer data that has been edited.

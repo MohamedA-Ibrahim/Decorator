@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
 using Windows.System;
 using Contoso.App.Views;
+using System.Drawing;
 
 namespace Contoso.App
 {
@@ -33,8 +34,9 @@ namespace Contoso.App
             //App.Window.ExtendsContentIntoTitleBar = true;
             //// Set XAML element as a draggable region.
             //App.Window.SetTitleBar(AppTitleBar);
-            
+
             //AppTitle.Text = "Decorator";
+
         }
 
         /// <summary>

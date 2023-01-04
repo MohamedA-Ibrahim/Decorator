@@ -3,7 +3,7 @@ using System;
 
 namespace Decorator.DataAccess;
 
-public class ProductDimension : DbObject
+public class ProductDimension : Entity
 {
     public Product Product { get; set; }
     public int ProductId { get; set; }
@@ -12,6 +12,6 @@ public class ProductDimension : DbObject
     public int Quantity { get; set; }
     public float Price { get; set; }
 
-    public string ProductFullName => $"{Product.Name} - {DimensionX} x {DimensionY}";
+    public string ProductFullName => $"{Product.Name} - {DimensionX} × {DimensionY} م";
 
 }

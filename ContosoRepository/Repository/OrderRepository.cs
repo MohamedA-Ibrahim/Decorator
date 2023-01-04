@@ -60,17 +60,53 @@ namespace Decorator.DataAccess
             var existing = await _db.Orders.FirstOrDefaultAsync(_order => _order.Id == order.Id);
             if (existing == null)
             {
-                order.InvoiceNumber = _db.Orders.Max(_order => _order.InvoiceNumber) + 1;
+                order.InvoiceNumber = (_db.Orders.Max(_order => _order.InvoiceNumber as int?) ?? 0) + 1;
+
+                //Add order
+                //We use this line instead of _db.Orders.Add(order)
+                //because of a bug which causes navigational items like products and productDimensions
+                //to be re-inserted as new records
 
                 _db.ChangeTracker.TrackGraph(order, node => node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
 
-                //_db.Orders.Add(order);
+
+                //foreach (var od in order.OrderDetails)
+                //{
+                //    od.ProductDimension.Quantity -= od.Quantity;
+                //}
+
             }
             else
             {
+                // Load the dimensions for the existing product
+                _db.Entry(existing).Collection(b => b.OrderDetails).Load();
+
+                // Get the list of the dimensions that were removed from the existing product
+                var OrderDetails = existing.OrderDetails.Exclude(order.OrderDetails, i => i.Id).ToList();
+
+                foreach (var doc in OrderDetails)
+                {
+                    // Remove the relationship between the dimensions and the product
+                    existing.OrderDetails.Remove(doc);
+
+                }
+
+                // Get the list of the newly added dimensions
+                var addedOrderDetails = order.OrderDetails.Exclude(existing.OrderDetails, i => i.Id).ToList();
+
+                foreach (var od in addedOrderDetails)
+                {
+                    // The document exists in the repository, so we just attach it to the context
+                    _db.OrderDetails.Attach(od);
+
+                    // Create the relation between the batch and document
+                    existing.OrderDetails.Add(od);
+                }
+
+                // Overwrite all property current values from modified product' entity values, 
+                // so that it will have all modified values and mark entity as modified.
                 _db.Entry(existing).CurrentValues.SetValues(order);
             }
-
 
             await _db.SaveChangesAsync();
             return order;

@@ -91,7 +91,16 @@ namespace Contoso.App.ViewModels
                     // Only record changes after the order has loaded. 
                     if (IsLoaded)
                     {
-                        _IsModified = value;
+                        if(IsInEdit)
+                        {
+                            _IsModified = value;
+
+                        }
+                        else
+                        {
+                            _IsModified = false;
+                        }
+
                         OnPropertyChanged();
                         OnPropertyChanged(nameof(CanRevert));
                     }
@@ -179,7 +188,9 @@ namespace Contoso.App.ViewModels
             }
 
             OnPropertyChanged(nameof(OrderDetails));
-            OnPropertyChanged(nameof(TotalPrice));
+
+            OnPropertyChanged(nameof(Subtotal));
+            OnPropertyChanged(nameof(GrandTotal));
             IsModified = true;
 
         }
@@ -288,25 +299,40 @@ namespace Contoso.App.ViewModels
             }
         }
 
-        /// <summary>
-        /// Gets the subtotal. This value is calculated automatically. 
-        /// </summary>
-        public float TotalPrice => Model.TotalPrice;
+
+        public float Subtotal => Model.Subtotal;
+
+        public float Discount
+        {
+            get => Model.Discount;
+            set
+            {
+                if (Model.Discount != value)
+                {
+                    Model.Discount = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(GrandTotal));
+                    IsModified = true;
+                }
+            }
+        }
+
+        public float GrandTotal => Model.GrandTotal;
 
 
         public async Task SaveOrderAsync()
         {
 
             Order result = null;
-            try
+            //try
             {
                 result = await App.Repository.Orders.UpsertAsync(Model);
             }
-            catch (Exception ex)
-            {
-                throw new OrderSavingException("Unable to save. There might have been a problem " +
-                    "connecting to the database. Please try again.", ex);
-            }
+            //catch (Exception ex)
+            //{
+            //    throw new OrderSavingException("Unable to save. There might have been a problem " +
+            //        "connecting to the database. Please try again.", ex);
+            //}
             if (result != null)
             {
                 await dispatcherQueue.EnqueueAsync(() =>
@@ -315,12 +341,12 @@ namespace Contoso.App.ViewModels
                     IsModified = false;
                 });
             }
-            else
-            {
-                await dispatcherQueue.EnqueueAsync(() => new OrderSavingException(
-                    "Unable to save. There might have been a problem " +
-                    "connecting to the database. Please try again."));
-            }
+            //else
+            //{
+            //    await dispatcherQueue.EnqueueAsync(() => new OrderSavingException(
+            //        "Unable to save. There might have been a problem " +
+            //        "connecting to the database. Please try again."));
+            //}
         }
 
         /// <summary>

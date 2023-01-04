@@ -20,7 +20,7 @@
             <MenuFlyoutItem
                 Click="MenuFlyoutViewDetails_Click"
                 Icon="OpenFile"
-                Text="View details" />
+                Text="عرض التفاصيل" />
         </MenuFlyout>
 
         <Style
@@ -64,7 +64,7 @@
         <TextBlock
                 x:Name="PageTitle"
                 Style="{StaticResource PageTitleTextBlockStyle}"
-                Text="Orders" />
+                Text="الطلبيات" />
 
         <!--Command bar that has Edit,Delete, Refresh buttons-->
         <CommandBar
@@ -80,25 +80,25 @@
                     Click="EditButton_Click"
                     Icon="Edit"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
-                    Label="Edit" />
+                    Label="تعديل" />
             <AppBarButton
                     x:Name="CommandBarDeleteButton"
                     Click="DeleteOrder_Click"
                     Icon="Delete"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
-                    Label="Delete" />
+                    Label="حذف" />
             <AppBarButton
                     Click="{x:Bind ViewModel.LoadOrders}"
                     Icon="Refresh"
-                    Label="Refresh" />
+                    Label="تحديث" />
 
             <AppBarSeparator/>
 
             <AppBarButton
                     Click="AddOrder_Click"
                     Icon="Shop"                   
-                    Label="Add order"
-                    ToolTipService.ToolTip="Add order" />
+                    Label="اضافة طلبية"
+                    ToolTipService.ToolTip="اضافة طلبية" />
         </CommandBar>
         
         <!-- Search box -->
@@ -143,7 +143,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock
                                 FontWeight="SemiBold"
-                                Text="Invoice #" />
+                                Text="فاتورة #" />
                         <TextBlock
                                 FontWeight="SemiBold"
                                 Text="{x:Bind ViewModel.SelectedOrder.InvoiceNumber, Mode=OneWay}" />
@@ -159,7 +159,7 @@
                                 Text="{x:Bind ViewModel.SelectedOrder.CustomerPhone, Mode=OneWay}" />
                     </StackPanel>
 
-                    <TextBlock FontWeight="SemiBold">Address</TextBlock>
+                    <TextBlock FontWeight="SemiBold">عنوان العميل</TextBlock>
                     <TextBlock Text="{x:Bind ViewModel.SelectedOrder.CustomerAddress, Mode=OneWay}" />
                 </StackPanel>
             </SplitView.Pane>
@@ -188,17 +188,17 @@
                         <!-- Grid Columns-->
                         <toolkit:DataGrid.Columns>
                             <toolkit:DataGridTextColumn
-                                    Header="Invoice"
+                                    Header="رقم الفاتورة"
                                     Tag="InvoiceNumber"
                                     Binding="{Binding InvoiceNumber}"/>
                             
                             <toolkit:DataGridTextColumn
-                                    Header="Customer"
+                                    Header="اسم العميل"
                                     Tag="CustomerName"
                                     Binding="{Binding CustomerName}"/>
                             
                             <toolkit:DataGridTemplateColumn
-                                    Header="Date"
+                                    Header="تاريخ الطلبية"
                                     Tag="DatePlaced">
                                 <toolkit:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate x:DataType="models:Order">
@@ -211,14 +211,14 @@
                             </toolkit:DataGridTemplateColumn>
 
                             <toolkit:DataGridTemplateColumn
-                                    Header="Total"
+                                    Header="اجمالي السعر"
                                     Tag="GrandTotal">
                                 <toolkit:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate x:DataType="models:Order">
                                         <TextBlock 
                                                 VerticalAlignment="Center"
                                                 Margin="12,0"
-                                                Text="{x:Bind sys:String.Format('\{0:c\}', TotalPrice)}"/>
+                                                Text="{x:Bind sys:String.Format('\{0:c\}', GrandTotal)}"/>
                                     </DataTemplate>
                                 </toolkit:DataGridTemplateColumn.CellTemplate>
                             </toolkit:DataGridTemplateColumn>

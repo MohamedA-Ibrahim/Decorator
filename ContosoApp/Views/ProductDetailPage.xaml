@@ -29,12 +29,12 @@
             <AppBarButton
                     Click="{x:Bind ViewModel.SaveAsync}"
                     Icon="Save"
-                    Label="Save"
+                    Label="حفظ"
                     Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
             <AppBarButton
                     Click="{x:Bind ViewModel.CancelEditsAsync}"
                     Icon="Cancel"
-                    Label="Cancel"
+                    Label="الغاء"
                     Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}" />
             <AppBarSeparator Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
             <AppBarButton
@@ -42,7 +42,7 @@
                     Icon="Edit"
                     IsEnabled="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                     Visibility="{x:Bind vm:Converters.CollapsedIf(ViewModel.IsNewProduct), Mode=OneWay}"
-                    Label="Edit" />
+                    Label="تعديل" />
 
         </CommandBar>
 
@@ -75,29 +75,33 @@
                     <muxc:Expander.Header>
                         <Grid>
                             <TextBlock 
-                                    Text="General"
+                                    Text="معلومات المنتج"
                                     Style="{ThemeResource SubtitleTextBlockStyle}"/>
 
                         </Grid>
                     </muxc:Expander.Header>
 
                     <RelativePanel Margin="8,0,0,12">
-                        <TextBox
-                                x:Name="ProductName"
-                                MinWidth="120"
-                                Margin="0,8,16,8"
-                                Header="Name"
-                                IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                                RelativePanel.AlignLeftWithPanel="True"
-                                Text="{x:Bind ViewModel.ProductName, Mode=TwoWay}"/>
+
                         <TextBox
                                 x:Name="Code"
                                 MinWidth="120"
                                 Margin="0,8,16,8"
-                                Header="Code"
+                                Header="كود المنتج"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                                RelativePanel.RightOf="ProductName"
+                               RelativePanel.AlignLeftWithPanel="True"
+
                                 Text="{x:Bind ViewModel.Code, Mode=TwoWay}" />
+                        
+                        <TextBox
+                                x:Name="ProductName"
+                                MinWidth="120"
+                                Margin="0,8,16,8"
+                                Header="اسم المنتج"
+                                RelativePanel.RightOf="Code"
+                                IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
+                                Text="{x:Bind ViewModel.ProductName, Mode=TwoWay}"/>
+
                     </RelativePanel>
 
                 </muxc:Expander>
@@ -107,7 +111,7 @@
 
                     <muxc:Expander.Header>
                         <TextBlock
-                                Text="Product Dimensions"
+                                Text="مقاسات المنتج"
                                 Style="{ThemeResource SubtitleTextBlockStyle}"/>
                     </muxc:Expander.Header>
 
@@ -128,25 +132,25 @@
 
                             <toolkit:DataGrid.Columns>
                                 <toolkit:DataGridTextColumn
-                                            Header="DimensionX"
+                                            Header="الطول"
                                             Tag="DimensionX"
                                             Binding="{Binding DimensionX}"
                                             CanUserSort="False"/>
 
                                 <toolkit:DataGridTextColumn
-                                            Header="DimensionY"
+                                            Header="العرض"
                                             Tag="DimensionY"
                                             Binding="{Binding DimensionY}"
                                             CanUserSort="False"/>
 
                                 <toolkit:DataGridTextColumn
-                                            Header="Quantity"
+                                            Header="الكمية"
                                             Tag="Quantity"
                                             Binding="{Binding Quantity}"
                                             CanUserSort="False"/>
 
                                 <toolkit:DataGridTextColumn
-                                            Header="Price"
+                                            Header="السعر"
                                             Tag="Price"
                                             Binding="{Binding Price}"
                                             CanUserSort="False"/>
@@ -195,11 +199,11 @@
                                 Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
 
 
-                        <Button Content="Add New Row"
+                        <Button Content="اضافة سطر جديد"
                                 Margin="0 10 0 0"
                                 HorizontalAlignment="Right"
                                 Click="AddNewRow_Click"
-                                Visibility="{x:Bind ViewModel.IsInEdit}">
+                                Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}">
 
                         </Button>
                     </StackPanel>

@@ -39,7 +39,6 @@ namespace Contoso.App
 
             InitializeComponent();
             App.Current.RequestedTheme = ApplicationTheme.Light;
-
         }
 
         /// <summary>
@@ -64,7 +63,25 @@ namespace Contoso.App
                     new SuppressNavigationTransitionInfo());
             }
 
+            this.LoadIcon("Decorator.ico");
+
             m_window.Activate();
+        }
+
+
+        /// <summary>
+        /// A win32 api call to set application icon
+        /// as it is not supprted in winui yet
+        /// </summary>
+        /// <param name="iconName"></param>
+        private void LoadIcon(string iconName)
+        {
+            //Get the Window's HWND
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(Window);
+            var hIcon = PInvoke.User32.LoadImage(System.IntPtr.Zero, iconName,
+                      PInvoke.User32.ImageType.IMAGE_ICON, 16, 16, PInvoke.User32.LoadImageFlags.LR_LOADFROMFILE);
+
+            PInvoke.User32.SendMessage(hwnd, PInvoke.User32.WindowMessage.WM_SETICON, (System.IntPtr)0, hIcon);
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -20,7 +20,6 @@ public class ProductRepository : IProductRepository
     {
         return await _db.Products
             .Include(p=> p.ProductDimensions)
-            .AsNoTracking()
             .ToListAsync();
     }
 
@@ -28,7 +27,6 @@ public class ProductRepository : IProductRepository
     {
         return await _db.Products
             .Include(p => p.ProductDimensions)
-            .AsNoTracking()
             .FirstOrDefaultAsync(product => product.Id == id);
     }
 
@@ -47,25 +45,47 @@ public class ProductRepository : IProductRepository
                           .ToListAsync();
     }
 
+
+
     public async Task<Product> UpsertAsync(Product product)
     {
-        var existing = await _db.Products.Include(x=> x.ProductDimensions).FirstOrDefaultAsync(p => p.Id == product.Id);
+        var existing = await _db.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
         if (existing == null)
         {
             _db.Products.Add(product);
         }
         else
         {
-            existing.Code = product.Code;
-            existing.Name = product.Name;
+            // Load the dimensions for the existing product
+            _db.Entry(existing).Collection(b => b.ProductDimensions).Load();
 
-            //Update product dimensions
-            existing.ProductDimensions.Clear();
-            foreach(var pd in product.ProductDimensions)
+            // Get the list of the dimensions that were removed from the existing product
+            var removedDimensions = existing.ProductDimensions.Exclude(product.ProductDimensions, i => i.Id).ToList();
+
+
+            foreach (var doc in removedDimensions)
+            {
+                // Remove the relationship between the dimensions and the product
+                existing.ProductDimensions.Remove(doc);
+            }
+
+            // Get the list of the newly added dimensions
+            var addedDimensions = product.ProductDimensions.Exclude(existing.ProductDimensions, i => i.Id).ToList();
+
+            foreach (var pd in addedDimensions)
+            {
+                // The document exists in the repository, so we just attach it to the context
+                _db.ProductDimensions.Attach(pd);
+
+                // Create the relation between the batch and document
                 existing.ProductDimensions.Add(pd);
-            
-            _db.Products.Update(existing);
+            }
+
+            // Overwrite all property current values from modified product' entity values, 
+            // so that it will have all modified values and mark entity as modified.
+            _db.Entry(existing).CurrentValues.SetValues(product);
         }
+
         await _db.SaveChangesAsync();
         return existing;
     }
@@ -81,25 +101,7 @@ public class ProductRepository : IProductRepository
         .ToListAsync();
     }
 
-    //public async Task<DeleteResult> RemoveProductDimensionAsync(int id)
-    //{
-    //    var match = await _db.ProductDimensions.FindAsync(id);
-    //    if (match == null)
-    //    {
-    //        return DeleteResult.NotExist;
-    //    }
 
-    //    var isproductDimensionInOrder = _db.OrderDetails.Any(x => x.ProductDimensionId == id);
-    //    if (isproductDimensionInOrder)
-    //    {
-    //        return DeleteResult.InOrder;
-    //    }
 
-    //    _db.ProductDimensions.Remove(match);
-    //    await _db.SaveChangesAsync();
-
-    //    return DeleteResult.Success;
-    //}
 
 }
-

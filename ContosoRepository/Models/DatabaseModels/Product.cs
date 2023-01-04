@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Decorator.DataAccess;
 
-public class Product : DbObject
+public class Product : Entity
 { 
     public string Name { get; set; }
 

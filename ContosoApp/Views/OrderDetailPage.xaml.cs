@@ -8,6 +8,14 @@ using Microsoft.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Email;
 using Decorator.DataAccess;
 using Contoso.App.ViewModels;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Contoso.App.Reporting;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using QuestPDF.Fluent;
+using System.Diagnostics;
+using CommunityToolkit.WinUI.UI;
+using System.Runtime.InteropServices;
+using Windows.Devices.Input;
 
 namespace Contoso.App.Views
 {
@@ -67,6 +75,31 @@ namespace Contoso.App.Views
         /// </summary>
         private async void RefreshButton_Click(object sender, RoutedEventArgs e) => 
             ViewModel = await OrderViewModel.CreateFromId(ViewModel.Id);
+
+
+        private void PrintButton_Click(object sender, RoutedEventArgs e)
+        {
+            var document = new InvoiceDocument(ViewModel.Model);
+            GenerateDocumentAndShow(document);
+        }
+
+
+        static void GenerateDocumentAndShow(InvoiceDocument document)
+        {
+            const string filePath = "invoice.pdf";
+
+            document.GeneratePdf(filePath);
+
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo(filePath)
+                {
+                    UseShellExecute = true
+                }
+            };
+
+            process.Start();
+        }
 
         /// <summary>
         /// Reverts the page.
@@ -135,16 +168,14 @@ namespace Contoso.App.Views
         private void ShowSuccessMessage()
         {
             InfoBarControl.Severity = InfoBarSeverity.Success;
-            InfoBarControl.Title = "Success";
-            InfoBarControl.Message = "Order Saved Successfully";
+            InfoBarControl.Message = "تم الحفظ بنجاح";
             InfoBarControl.IsOpen = true;
         }
 
         private void ShowErrorMessage()
         {
             InfoBarControl.Severity = InfoBarSeverity.Error;
-            InfoBarControl.Title = "Invalid input";
-            InfoBarControl.Message = "Please check your input";
+            InfoBarControl.Message = "برجاء التأكد من ادخال جميع البيانات";
             InfoBarControl.IsOpen = true;
         }
 
@@ -179,7 +210,21 @@ namespace Contoso.App.Views
         /// </summary>
         private void AddProductButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.OrderDetails.Add(ViewModel.NewOrderDetail.Model);
+            var existing = ViewModel.OrderDetails.FirstOrDefault(x=> x.ProductDimension.Id == ViewModel.NewOrderDetail.Model.ProductDimension.Id);
+            if(existing == null)
+            {
+                ViewModel.OrderDetails.Add(ViewModel.NewOrderDetail.Model);
+            }
+            else
+            {
+                existing.Quantity = ViewModel.NewOrderDetail.Quantity;
+
+                //Remove and add the value to trigger collectionChanged
+                //instead of having to implement INotifyPropertyChanged for Quantity
+                ViewModel.OrderDetails.Remove(existing);
+                ViewModel.OrderDetails.Add(existing);
+            }
+
             ClearCandidateProduct();
         }
 
@@ -216,5 +261,10 @@ namespace Contoso.App.Views
         /// </summary>
         private void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -13,9 +13,15 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        
         <Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
             <Setter Property="MinWidth" Value="150" />
         </Style>
+
+        <!-- A dummy button used to enable Binding to properties outside of DataTemplate (using ElementName instead) -->
+        <Button x:Name="RemoveButtonVisibility" Visibility="{x:Bind vm:Converters.VisibleIf(ViewModel.IsInEdit)}"/>
+        
+        
         <DataTemplate x:Key="DefaultOrderDetailTemplate"
             x:DataType="models:OrderDetail">
             
@@ -90,8 +96,6 @@
             </Grid>
         </DataTemplate>
 
-        <!-- A dummy button used to enable Binding to properties outside of DataTemplate (using ElementName instead) -->
-        <Button x:Name="RemoveButtonVisibility" Visibility="{x:Bind vm:Converters.VisibleIf(ViewModel.IsInEdit)}"/>
 
     </Page.Resources>
 
@@ -104,7 +108,7 @@
                 <TextBlock
                     Margin="0"
                     Style="{StaticResource PageTitleTextBlockStyle}"
-                    Text="Order #"
+                    Text="طلبية #"
                     Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay}" />
                 <TextBlock
                     Margin="0"
@@ -115,7 +119,7 @@
                 <TextBlock
                     Margin="0"
                     Style="{StaticResource PageTitleTextBlockStyle}"
-                    Text="New order"
+                    Text="طلبية جديدة"
                     Visibility="{x:Bind ViewModel.IsNewOrder, Mode=OneWay}" />
 
                 
@@ -133,18 +137,25 @@
                     Click="SaveButton_Click"
                     IsEnabled="{x:Bind ViewModel.IsModified, Mode=OneWay}"
                     Icon="Save"
-                    Label="Save" />
+                    Label="حفظ" />
                 <AppBarButton
                     Click="RevertButton_Click"
                     Icon="Undo"
                     IsEnabled="{x:Bind ViewModel.CanRevert, Mode=OneWay}"
-                    Label="Revert" />
+                    Label="تراجع" />
                 <AppBarButton
                     Click="RefreshButton_Click"
                     Icon="Refresh"
                     IsEnabled="{x:Bind ViewModel.CanRefresh, Mode=OneWay}"
-                    Label="Refresh" />
-            </CommandBar>
+                    Label="تحديث" />
+            <AppBarSeparator/>
+
+            <AppBarButton
+                    Click="PrintButton_Click"
+                    Icon="Print"
+                    IsEnabled="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay}"
+                    Label="طباعة" />
+        </CommandBar>
 
             <!--  Order body  -->
             <ScrollViewer
@@ -179,14 +190,14 @@
 
                     <TextBlock Margin="0,20,0,2"
                                FontWeight="SemiBold"
-                               Text="Customer Name" />
+                               Text="اسم العميل" />
                     <TextBox
                              Text="{x:Bind ViewModel.CustomerName, Mode=TwoWay}"
                              IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
 
                     <TextBlock Margin="0,20,0,2"
                                FontWeight="SemiBold"
-                               Text="Phone"/>
+                               Text="رقم الهاتف"/>
                     
                     <TextBox
                             Width="300"
@@ -197,7 +208,7 @@
                     <TextBlock
                             Margin="0,20,0,2"
                             FontWeight="SemiBold"
-                            Text="Shipping address"/>
+                            Text="عنوان العميل"/>
 
                     <TextBox
                             x:Name="ShippingAddressTextBox"
@@ -233,12 +244,12 @@
                                 Grid.Column="0"
                                 Margin="0,0,10,0"
                                 FontWeight="SemiBold">
-                                Placed:
+                                تاريخ الفاتورة:
                         </TextBlock>
                         <TextBlock
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Text="{x:Bind sys:String.Format('\{0:g\}', ViewModel.PurchaseDate), Mode=OneWay}" />
+                                Text="{x:Bind sys:String.Format('\{0:yyyy/MM/dd\}', ViewModel.PurchaseDate), Mode=OneWay}" />
                     </Grid>
 
 
@@ -272,7 +283,7 @@
                             <TextBlock
                                 Grid.Column="0"
                                 FontWeight="SemiBold"
-                                Text="Product" />
+                                Text="اسم المنتج" />
                             <TextBlock
                                 Grid.Column="2"
                                 Margin="8,0,0,0"
@@ -280,7 +291,7 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
                                 FontWeight="SemiBold"
-                                Text="Price" />
+                                Text="السعر" />
                             <TextBlock
                                 Grid.Column="3"
                                 Margin="8,0,0,0"
@@ -288,10 +299,10 @@
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
                                 FontWeight="SemiBold"
-                                Text="Quantity" />
+                                Text="الكمية" />
                         </Grid>
 
-                        <!--  Line item list  -->
+                        <!--  order detail list  -->
                         <ListView
                             x:Name="OrderDetailListView"
                             ItemTemplate="{StaticResource DefaultOrderDetailTemplate}"
@@ -327,7 +338,7 @@
                                 x:Name="ProductSearchBox"
                                 Grid.Column="0"
                                 MinWidth="200"
-                                PlaceholderText="Enter a product..."
+                                PlaceholderText="ابحث عن منتج ..."
                                 TextMemberPath="ProductFullName"
                                 ItemsSource="{x:Bind ViewModel.ProductSuggestions, Mode=OneWay}"
                                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
@@ -478,29 +489,66 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Border
-                                Grid.Row="0"
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                                Grid.Column="1"
+                                Margin="0,0,20,0"
+                                Padding="0,0,0,0"
+                                HorizontalAlignment="Right"
+                                Text="اجمالي قبل الخصم" />
+                        <TextBlock
+                                Grid.Column="2"
+                                Margin="0,0,0,0"
+                                Padding="0,0,0,0"
+                                HorizontalAlignment="Right"
+                                Text="{x:Bind sys:String.Format('\{0:0.00\}', ViewModel.Subtotal), Mode=OneWay}" />
+                        <Border
+                                Grid.Row="1"
                                 Grid.Column="1"
                                 Grid.ColumnSpan="2"
+                                Margin="0 5 0 5"
+                                BorderBrush="LightGray"
+                                BorderThickness="0,0,0,1" />
+                        <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="0,0,0,0"
+                                Padding="0,0,0,0"
+                                Text="الخصم" />
+                        <TextBox
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Text="{x:Bind ViewModel.Discount, Mode=TwoWay}" />
+                        <Border
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                Margin ="0 5 0 0"
                                 BorderBrush="LightGray"
                                 BorderThickness="0,0,0,1" />
                             <TextBlock
-                                Grid.Row="1"
+                                Grid.Row="4"
                                 Grid.Column="1"
                                 Margin="0,0,20,0"
                                 Padding="0,0,0,0"
                                 FontWeight="Bold"
-                                Text="Total" />
+                                Text="إجمالي بعد الخصم" />
                             <TextBlock
-                                Grid.Row="1"
+                                Grid.Row="4"
                                 Grid.Column="2"
                                 Margin="0,0,0,0"
                                 Padding="0,0,0,0"
                                 HorizontalAlignment="Right"
                                 FontWeight="Bold"
-                                Text="{x:Bind sys:String.Format('\{0:c\}', ViewModel.TotalPrice), Mode=OneWay}" />
+                                Text="{x:Bind sys:String.Format('\{0:0.00\}', ViewModel.GrandTotal), Mode=OneWay}" />
                         </Grid>
                     </StackPanel>
 

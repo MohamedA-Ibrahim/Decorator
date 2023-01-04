@@ -2,7 +2,7 @@ using System;
 
 namespace Decorator.DataAccess
 {
-    public class OrderDetail : DbObject
+    public class OrderDetail : Entity
     {
         public int OrderId { get; set; }
 

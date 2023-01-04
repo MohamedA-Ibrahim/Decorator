@@ -40,7 +40,7 @@ namespace Contoso.App.Views
             {
                 ProductSearchBox.AutoSuggestBox.QuerySubmitted += ProductSearchBox_QuerySubmitted;
                 ProductSearchBox.AutoSuggestBox.TextChanged += ProductSearchBox_TextChanged;
-                ProductSearchBox.AutoSuggestBox.PlaceholderText = "Search products...";
+                ProductSearchBox.AutoSuggestBox.PlaceholderText = "البحث عن منتج ...";
             }
         }
 

@@ -48,11 +48,13 @@
         <muxc:NavigationView
             x:Name="NavView"
             AlwaysShowHeader="False"
-            IsSettingsVisible="True"
+            IsSettingsVisible="False"
             ItemInvoked="NavigationView_ItemInvoked"
             BackRequested="NavigationView_BackRequested"
             IsBackButtonVisible="Collapsed"
-            IsTitleBarAutoPaddingEnabled="False">
+            IsTitleBarAutoPaddingEnabled="False"
+            Background="AliceBlue"
+            >
 
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem

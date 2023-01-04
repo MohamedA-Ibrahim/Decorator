@@ -13,14 +13,12 @@
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
     <UseWPF>False</UseWPF>
 	 <WindowsPackageType>None</WindowsPackageType>
-	 <ApplicationIcon>Assets\Decorator.ico</ApplicationIcon>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="Assets\Decorator.jpg" />
-  </ItemGroup>
+	
   <ItemGroup>
     <None Remove="AppShell.xaml" />
     <None Remove="Assets\Decorator.db" />
+    <None Remove="Decorator.ico" />
     <None Remove="MainWindow.xaml" />
     <None Remove="UserControls\CollapsibleSearchBox.xaml" />
     <None Remove="Views\OrderDetailPage.xaml" />
@@ -29,6 +27,12 @@
     <None Remove="Views\ProductListPage.xaml" />
     <None Remove="Views\SaveChangesDialog.xaml" />
     <None Remove="Views\SettingsPage.xaml" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Content Include="Decorator.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +49,8 @@
     <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="2.25.3" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.221209.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+    <PackageReference Include="PInvoke.User32" Version="0.7.124" />
+    <PackageReference Include="QuestPDF" Version="2022.12.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 

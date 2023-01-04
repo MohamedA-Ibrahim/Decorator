@@ -79,7 +79,7 @@ namespace Contoso.App.Views
             {
                 searchBox.AutoSuggestBox.QuerySubmitted += OrderSearch_QuerySubmitted;
                 searchBox.AutoSuggestBox.TextChanged += OrderSearch_TextChanged;
-                searchBox.AutoSuggestBox.PlaceholderText = "Search orders...";
+                searchBox.AutoSuggestBox.PlaceholderText = "البحث عن طلبية...";
                 searchBox.AutoSuggestBox.ItemTemplate = (DataTemplate)Resources["SearchSuggestionItemTemplate"];
                 searchBox.AutoSuggestBox.ItemContainerStyle = (Style)Resources["SearchSuggestionItemStyle"];
                 searchBox.AutoSuggestBox.ItemsSource = ViewModel.OrderSuggestions;

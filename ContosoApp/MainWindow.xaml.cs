@@ -1,4 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
+using System.Runtime.InteropServices;
+using System;
 
 namespace Contoso.App
 {
@@ -10,6 +12,7 @@ namespace Contoso.App
         public MainWindow()
         {
             this.InitializeComponent();
+            this.Title = "Decorator";
         }
     }
 }
