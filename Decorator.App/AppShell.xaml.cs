@@ -99,7 +99,6 @@ namespace Decorator.App
         {
             var label = args.InvokedItem as string;
             var pageType =
-                args.IsSettingsInvoked ? typeof(SettingsPage) :
                 label == ProductListLabel ? typeof(ProductListPage) :
                 label == OrderListLabel ? typeof(OrderListPage) : null;
             if (pageType != null && pageType != AppFrame.CurrentSourcePageType)
@@ -123,10 +122,6 @@ namespace Decorator.App
                 else if (e.SourcePageType == typeof(OrderListPage))
                 {
                     NavView.SelectedItem = OrderListMenuItem;
-                }
-                else if (e.SourcePageType == typeof(SettingsPage))
-                {
-                    NavView.SelectedItem = NavView.SettingsItem;
                 }
             }
         }
