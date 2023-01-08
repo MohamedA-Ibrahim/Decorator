@@ -261,10 +261,5 @@ namespace Contoso.App.Views
         /// </summary>
         private void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

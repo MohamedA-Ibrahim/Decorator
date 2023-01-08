@@ -60,11 +60,22 @@ namespace Contoso.App.ViewModels
 
         public async void SearchOrders(string query)
         {
+            string[] parameters = query.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
             if (!string.IsNullOrWhiteSpace(query))
             {
                 IsLoading = true;
                 Orders.Clear();
-                var results = await App.Repository.Orders.GetAsync(query);
+                var results = MasterOrdersList
+                            .Where(order => parameters
+                                .Any(parameter =>
+                                    order.CustomerName.Contains(parameter) ||
+                                    order.InvoiceNumber.ToString().StartsWith(parameter)))
+                            .OrderByDescending(order => parameters
+                                .Count(parameter =>
+                                    order.CustomerName.Contains(parameter) ||
+                                    order.InvoiceNumber.ToString().StartsWith(parameter)));
+
                 await dispatcherQueue.EnqueueAsync(() =>
                 {
                     foreach (Order o in results)
@@ -82,32 +93,5 @@ namespace Contoso.App.ViewModels
 
         public ObservableCollection<Order> OrderSuggestions { get; } = new ObservableCollection<Order>();
 
-        /// <summary>
-        /// Queries the database and updates the list of new order suggestions.
-        /// </summary>
-        public void UpdateOrderSuggestions(string queryText)
-        {
-            OrderSuggestions.Clear();
-            if (!string.IsNullOrEmpty(queryText))
-            {
-                string[] parameters = queryText.Split(new char[] { ' ' },
-                    StringSplitOptions.RemoveEmptyEntries);
-
-                var resultList = MasterOrdersList
-                    .Where(order => parameters
-                        .Any(parameter =>
-                            order.CustomerName.Contains(parameter) ||
-                            order.InvoiceNumber.ToString().StartsWith(parameter)))
-                    .OrderByDescending(order => parameters
-                        .Count(parameter =>
-                            order.CustomerName.Contains(parameter) ||
-                            order.InvoiceNumber.ToString().StartsWith(parameter)));
-
-                foreach (Order order in resultList)
-                {
-                    OrderSuggestions.Add(order);
-                }
-            }
-        }
     }
 }

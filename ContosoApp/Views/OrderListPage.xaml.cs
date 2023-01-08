@@ -8,6 +8,7 @@ using Windows.ApplicationModel.Email;
 using CommunityToolkit.WinUI.UI.Controls;
 using Decorator.DataAccess;
 using Contoso.App.ViewModels;
+using System.Linq;
 
 namespace Contoso.App.Views
 {
@@ -80,8 +81,8 @@ namespace Contoso.App.Views
                 searchBox.AutoSuggestBox.QuerySubmitted += OrderSearch_QuerySubmitted;
                 searchBox.AutoSuggestBox.TextChanged += OrderSearch_TextChanged;
                 searchBox.AutoSuggestBox.PlaceholderText = "البحث عن طلبية...";
-                searchBox.AutoSuggestBox.ItemTemplate = (DataTemplate)Resources["SearchSuggestionItemTemplate"];
-                searchBox.AutoSuggestBox.ItemContainerStyle = (Style)Resources["SearchSuggestionItemStyle"];
+                //searchBox.AutoSuggestBox.ItemTemplate = (DataTemplate)Resources["SearchSuggestionItemTemplate"];
+                //searchBox.AutoSuggestBox.ItemContainerStyle = (Style)Resources["SearchSuggestionItemStyle"];
                 searchBox.AutoSuggestBox.ItemsSource = ViewModel.OrderSuggestions;
             }
         }
@@ -90,7 +91,7 @@ namespace Contoso.App.Views
         /// Searches the list of orders.
         /// </summary>
         private void OrderSearch_QuerySubmitted(AutoSuggestBox sender, 
-            AutoSuggestBoxQuerySubmittedEventArgs args) => 
+            AutoSuggestBoxQuerySubmittedEventArgs args) =>
                 ViewModel.SearchOrders(args.QueryText);
 
         /// <summary>
@@ -102,19 +103,45 @@ namespace Contoso.App.Views
             // We only want to get results when it was a user typing, 
             // otherwise we assume the value got filled in by TextMemberPath 
             // or the handler for SuggestionChosen
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                ViewModel.UpdateOrderSuggestions(sender.Text);
+                return;
             }
+
+            if (string.IsNullOrEmpty(sender.Text))
+            {
+                ViewModel.LoadOrders();
+                sender.ItemsSource = null;
+            }
+            else
+            {
+
+                string[] parameters = sender.Text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                sender.ItemsSource = ViewModel.Orders
+                    .Where(order => parameters
+                        .Any(parameter =>
+                            order.CustomerName.Contains(parameter) ||
+                            order.InvoiceNumber.ToString().StartsWith(parameter)))
+                    .OrderByDescending(order => parameters
+                        .Count(parameter =>
+                            order.CustomerName.Contains(parameter) ||
+                            order.InvoiceNumber.ToString().StartsWith(parameter)))
+                    .Select(o => $"{o.InvoiceNumber} - {o.CustomerName}");
+            }
+
+
+            //ViewModel.UpdateOrderSuggestions(sender.Text);
         }
 
         /// <summary>
         /// Navigates to the order detail page when the user
         /// double-clicks an order. 
         /// </summary>
-        private void DataGrid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => 
-            Frame.Navigate(typeof(OrderDetailPage), ViewModel.SelectedOrder.Id);
-
+        private void DataGrid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) =>
+            Frame.Navigate(
+                typeof(OrderDetailPage),
+                new OrderListToDetailParameter(ViewModel.SelectedOrder.Id, false));
         // Navigates to the details page for the selected customer when the user presses SPACE.
         private void DataGrid_KeyDown(object sender, KeyRoutedEventArgs e)
         {

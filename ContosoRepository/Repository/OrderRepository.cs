@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace Decorator.DataAccess
@@ -42,16 +43,12 @@ namespace Decorator.DataAccess
             }
             else
             {
-                string[] parameters = value.Split(' ');
                 return await _db.Orders
                 .Include(order => order.OrderDetails)
                 .ThenInclude(orderDetail => orderDetail.ProductDimension)
-                    .Where(order => parameters
-                        .Any(parameter =>
-                            order.CustomerName.StartsWith(parameter) ||
-                            order.InvoiceNumber.ToString().StartsWith(parameter)))
-                    .AsNoTracking()
-                    .ToListAsync();
+                .Where(o => o.CustomerName.StartsWith(value) || o.InvoiceNumber.ToString().StartsWith(value))                   
+                .AsNoTracking()
+                .ToListAsync();
             }
 
         }
@@ -82,9 +79,6 @@ namespace Decorator.DataAccess
             }
             else
             {
-                // Load the order details for the existing order
-                //_db.Entry(existing).Collection(b => b.OrderDetails).Load();
-
                 // Get the list of the order details that were removed from the existing order
                 var removedOrderDetails = existing.OrderDetails.Exclude(order.OrderDetails, i => i.Id).ToList();
 

@@ -324,15 +324,15 @@ namespace Contoso.App.ViewModels
         {
 
             Order result = null;
-            //try
+            try
             {
                 result = await App.Repository.Orders.UpsertAsync(Model);
             }
-            //catch (Exception ex)
-            //{
-            //    throw new OrderSavingException("Unable to save. There might have been a problem " +
-            //        "connecting to the database. Please try again.", ex);
-            //}
+            catch (Exception ex)
+            {
+                throw new OrderSavingException("Unable to save. There might have been a problem " +
+                    "connecting to the database. Please try again.", ex);
+            }
             if (result != null)
             {
                 await dispatcherQueue.EnqueueAsync(() =>
@@ -341,12 +341,12 @@ namespace Contoso.App.ViewModels
                     IsModified = false;
                 });
             }
-            //else
-            //{
-            //    await dispatcherQueue.EnqueueAsync(() => new OrderSavingException(
-            //        "Unable to save. There might have been a problem " +
-            //        "connecting to the database. Please try again."));
-            //}
+            else
+            {
+                await dispatcherQueue.EnqueueAsync(() => new OrderSavingException(
+                    "Unable to save. There might have been a problem " +
+                    "connecting to the database. Please try again."));
+            }
         }
 
         /// <summary>

@@ -56,24 +56,25 @@ namespace Contoso.App.Views
             // We only want to get results when it was a user typing,
             // otherwise we assume the value got filled in by TextMemberPath
             // or the handler for SuggestionChosen.
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            if (args.Reason != AutoSuggestionBoxTextChangeReason.UserInput)
+                return;
+
+            // If no search query is entered, refresh the complete list.
+            if (string.IsNullOrEmpty(sender.Text))
             {
-                // If no search query is entered, refresh the complete list.
-                if (String.IsNullOrEmpty(sender.Text))
-                {
-                    await dispatcherQueue.EnqueueAsync(async () => await ViewModel.GetProductListAsync());
-                    sender.ItemsSource = null;
-                }
-                else
-                {
-                    string[] parameters = sender.Text.Split(new char[] { ' ' },
-                        StringSplitOptions.RemoveEmptyEntries);
-                    sender.ItemsSource = ViewModel.Products
-                        .Where(product => parameters.Any(parameter =>
-                            product.Code.StartsWith(parameter) ||
-                            product.ProductName.StartsWith(parameter)))
-                        .Select(product => $"{product.Code} - {product.ProductName}"); 
-                }
+                await dispatcherQueue.EnqueueAsync(async () => await ViewModel.GetProductListAsync());
+                sender.ItemsSource = null;
+            }
+            else
+            {
+                string[] parameters = sender.Text.Split(new char[] { ' ' },
+                    StringSplitOptions.RemoveEmptyEntries);
+
+                sender.ItemsSource = ViewModel.Products
+                    .Where(product => parameters.Any(parameter =>
+                        product.Code.StartsWith(parameter) ||
+                        product.ProductName.StartsWith(parameter)))
+                    .Select(product => $"{product.Code} - {product.ProductName}");
             }
         }
 
@@ -82,7 +83,7 @@ namespace Contoso.App.Views
         private async void ProductSearchBox_QuerySubmitted(AutoSuggestBox sender,
             AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (String.IsNullOrEmpty(args.QueryText))
+            if (string.IsNullOrEmpty(args.QueryText))
             {
                 await ResetProductList();
             }
@@ -96,6 +97,7 @@ namespace Contoso.App.Views
         {
             await dispatcherQueue.EnqueueAsync(async () => await ViewModel.GetProductListAsync());
         }
+
         private async Task FilterProductList(string text)
         {
             string[] parameters = text.Split(new char[] { ' ' },
