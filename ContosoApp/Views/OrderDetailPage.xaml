@@ -10,7 +10,8 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:sys="using:System"
     NavigationCacheMode="Required"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    x:Name="workaroundNameForPage">
 
     <Page.Resources>
         
@@ -18,10 +19,6 @@
             <Setter Property="MinWidth" Value="150" />
         </Style>
 
-        <!-- A dummy button used to enable Binding to properties outside of DataTemplate (using ElementName instead) -->
-        <Button x:Name="RemoveButtonVisibility" Visibility="{x:Bind vm:Converters.VisibleIf(ViewModel.IsInEdit)}"/>
-        
-        
         <DataTemplate x:Key="DefaultOrderDetailTemplate"
             x:DataType="models:OrderDetail">
             
@@ -58,7 +55,9 @@
                     Padding="0,0,0,0"
                     HorizontalAlignment="Right"
                     Text="{x:Bind Quantity}" />
-                
+
+                <!-- Currently, binding to properties outside the model defined in the datatemplate is not supported
+                     So we give a name to the page as a workaround and use the Binding with ElementName-->
                 <Button
                     Grid.Row="0"
                     Grid.Column="5"
@@ -71,8 +70,8 @@
                     Click="RemoveProduct_Click"
                     Content="&#xE711;"                                               
                     FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                    Visibility="{Binding Visibility, ElementName=RemoveButtonVisibility}">
-                    
+                    Visibility="{Binding Path=ViewModel.IsInEdit, ElementName=workaroundNameForPage, Mode=OneWay}">
+
                     <Button.Resources>
                         <ResourceDictionary>
                             <ResourceDictionary.ThemeDictionaries>
@@ -221,15 +220,13 @@
                 </StackPanel>
 
                     <!--  Order status and payment info section  -->
-                    <StackPanel
+                <StackPanel
                         x:Name="StatusPanel"
                         Grid.RowSpan="2"
                         Grid.Column="2"
                         Margin="20,20,0,0"
                         HorizontalAlignment="Right">
 
-
-                        
                     <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
