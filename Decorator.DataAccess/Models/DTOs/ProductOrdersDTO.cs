@@ -18,5 +18,9 @@ namespace Decorator.DataAccess
 
         public DateTime PurchaseDate { get; set; }
         public string ProductName { get; set; }
+
+        //Used temporarly until QuestPDF fix arabic letters with numbers bug
+        public float DimensionX { get; set; }
+        public float DimensionY { get; set; }
     }
 }

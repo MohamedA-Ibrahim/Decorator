@@ -65,8 +65,12 @@ namespace Decorator.App.Reporting
                 column.Item().Element(ComposeTable);
 
                 var totalPrice = Model.Sum(x => x.Price * x.Quantity);
-                column.Item().PaddingLeft(5).AlignLeft().Text("الإجمالي: " + totalPrice.ToString()).SemiBold();
 
+                column.Item().PaddingLeft(5).AlignLeft().Text(text =>
+                {
+                    text.Span("الإجمالي: ").SemiBold();
+                    text.Span(totalPrice.ToString("0.00")).DirectionFromLeftToRight();
+                });
             });
         }
 
@@ -108,7 +112,14 @@ namespace Decorator.App.Reporting
 
                     table.Cell().Element(CellStyle).Text($"{index}");
                     table.Cell().Element(CellStyle).Text($"{p.PurchaseDate:yyyy/MM/dd}");
-                    table.Cell().Element(CellStyle).Text(p.ProductName);
+
+                    table.Cell().Element(CellStyle).Text(text =>
+                    {
+                        text.Span(p.ProductName);
+                        text.Span(" - ");
+                        text.Span($"{p.DimensionX} × {p.DimensionY}");
+                    });
+
                     table.Cell().Element(CellStyle).Text(p.CustomerName);
                     table.Cell().Element(CellStyle).AlignCenter().Text($"{p.Quantity}");
                     table.Cell().Element(CellStyle).AlignRight().Text(p.Price.ToString("0.00"));

@@ -44,10 +44,11 @@ public class ProductRepository : IProductRepository
                 PurchaseDate = x.Order.PurchaseDate,
                 Quantity = x.Quantity,
                 Price = x.Price,
-                ProductName = $"{x.ProductDimension.Product.Name} {x.ProductDimension.DimensionX} × {x.ProductDimension.DimensionY} سم"
+                DimensionX = x.ProductDimension.DimensionX,
+                DimensionY = x.ProductDimension.DimensionY,
+                ProductName = x.ProductDimension.Product.Name
             }).ToListAsync();
     }
-
 
 
     /// <summary>
@@ -119,8 +120,4 @@ public class ProductRepository : IProductRepository
         .AsNoTracking()
         .ToListAsync();
     }
-
-
-
-
 }

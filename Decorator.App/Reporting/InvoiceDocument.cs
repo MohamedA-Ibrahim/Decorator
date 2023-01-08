@@ -1,4 +1,5 @@
 ﻿using Decorator.DataAccess;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -75,7 +76,14 @@ namespace Decorator.App.Reporting
                 column.Item().Element(ComposeTable);
 
                 var totalPrice = Model.OrderDetails.Sum(x => x.Price * x.Quantity);
-                column.Item().PaddingLeft(5).AlignLeft().Text("\u200f"+ "الإجمالي:" + "\u061C" + totalPrice.ToString()).SemiBold();
+
+                column.Item().PaddingLeft(5).AlignLeft().Text(text =>
+                {
+                    text.Span("الإجمالي: ").SemiBold();
+                    text.Span(totalPrice.ToString("0.00")).DirectionFromLeftToRight();
+                });
+
+                //column.Item().PaddingLeft(5).AlignLeft().Text("الإجمالي:" + totalPrice.ToString()).SemiBold();
 
                column.Item().PaddingTop(25).Element(ComposeComments);
             });
@@ -107,17 +115,23 @@ namespace Decorator.App.Reporting
                     header.Cell().ColumnSpan(5).PaddingTop(5).BorderBottom(1).BorderColor(Colors.Black);
                 });
 
-
-
                 foreach (var od in Model.OrderDetails)
                 {
                     var index = Model.OrderDetails.IndexOf(od) + 1;
 
                     table.Cell().Element(CellStyle).Text($"{index}");
-                    table.Cell().Element(CellStyle).Text(od.ProductDimension.ProductFullName);
+
+                    //A tempory solution to QuestPDF not supporting arabic with numbers in same string
+                    table.Cell().Element(CellStyle).Text(text =>
+                    {
+                        text.Span(od.ProductDimension.Product.Name);
+                        text.Span(" - ");
+                        text.Span($"{od.ProductDimension.DimensionX} × {od.ProductDimension.DimensionY}");
+                    });
+
                     table.Cell().Element(CellStyle).AlignCenter().Text($"{od.Quantity}");
                     table.Cell().Element(CellStyle).AlignRight().Text(od.Price.ToString("0.00"));
-                    table.Cell().Element(CellStyle).AlignCenter().Text($"{od.Price * od.Quantity}");
+                    table.Cell().Element(CellStyle).AlignCenter().Text($"{od.Price * od.Quantity:0.00}");
 
                     static IContainer CellStyle(IContainer container) => container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
                 }
