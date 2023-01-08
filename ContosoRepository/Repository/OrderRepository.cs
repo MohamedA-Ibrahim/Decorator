@@ -67,15 +67,7 @@ namespace Decorator.DataAccess
                 //We use this line instead of _db.Orders.Add(order)
                 //because of a bug which causes navigational items like products and productDimensions
                 //to be re-inserted as new records
-
                 _db.ChangeTracker.TrackGraph(order, node => node.Entry.State = !node.Entry.IsKeySet ? EntityState.Added : EntityState.Unchanged);
-
-
-                //foreach (var od in order.OrderDetails)
-                //{
-                //    od.ProductDimension.Quantity -= od.Quantity;
-                //}
-
             }
             else
             {
@@ -115,12 +107,7 @@ namespace Decorator.DataAccess
 
         public async Task DeleteAsync(int orderId)
         {
-            var match = await _db.Orders.FirstOrDefaultAsync(_order => _order.Id == orderId);
-            if (match != null)
-            {
-                _db.Orders.Remove(match);
-            }
-            await _db.SaveChangesAsync();
+            await _db.Orders.Where(p => p.Id == orderId).ExecuteDeleteAsync();
         }
     }
 }
