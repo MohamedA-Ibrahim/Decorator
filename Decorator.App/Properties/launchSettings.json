@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Decorator.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Decorator.App": {
+      "commandName": "Project"
+    }
+  }
+}
