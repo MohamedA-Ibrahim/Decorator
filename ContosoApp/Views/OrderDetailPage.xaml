@@ -501,7 +501,7 @@
                                 Margin="0,0,0,0"
                                 Padding="0,0,0,0"
                                 HorizontalAlignment="Right"
-                                Text="{x:Bind sys:String.Format('\{0:0.00\}', ViewModel.Subtotal), Mode=OneWay}" />
+                                Text="{x:Bind sys:String.Format('\{0:0.00\}', ViewModel.SubTotal), Mode=OneWay}" />
                         <Border
                                 Grid.Row="1"
                                 Grid.Column="1"

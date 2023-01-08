@@ -19,8 +19,8 @@ namespace Decorator.DataAccess
 
         public float Discount { get; set; }
 
-        public float Subtotal => OrderDetails.Sum(orderDetail => orderDetail.ProductDimension.Price * orderDetail.Quantity);
+        public float SubTotal => OrderDetails.Sum(orderDetail => orderDetail.ProductDimension.Price * orderDetail.Quantity);
 
-        public float GrandTotal => Subtotal - Discount;
+        public float GrandTotal => SubTotal - Discount;
     }
 }

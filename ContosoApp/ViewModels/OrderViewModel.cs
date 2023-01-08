@@ -189,7 +189,7 @@ namespace Contoso.App.ViewModels
 
             OnPropertyChanged(nameof(OrderDetails));
 
-            OnPropertyChanged(nameof(Subtotal));
+            OnPropertyChanged(nameof(SubTotal));
             OnPropertyChanged(nameof(GrandTotal));
             IsModified = true;
 
@@ -300,7 +300,7 @@ namespace Contoso.App.ViewModels
         }
 
 
-        public float Subtotal => Model.Subtotal;
+        public float SubTotal => Model.SubTotal;
 
         public float Discount
         {

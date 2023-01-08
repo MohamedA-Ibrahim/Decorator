@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 
 namespace Decorator.DataAccess;
 
@@ -11,7 +12,7 @@ public class ProductDimension : Entity
     public float DimensionY { get; set; }
     public int Quantity { get; set; }
     public float Price { get; set; }
-
+    public ICollection<OrderDetail> OrderDetails { get; set; }
     public string ProductFullName => $"{Product.Name} - {DimensionX} × {DimensionY} سم";
 
 }
