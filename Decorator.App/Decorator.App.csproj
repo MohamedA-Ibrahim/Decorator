@@ -4,7 +4,6 @@
     <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <RootNamespace>Decorator.App</RootNamespace>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
     <PublishProfile>win10-$(Platform).pubxml</PublishProfile>
@@ -13,6 +12,15 @@
     <SupportedOSPlatformVersion>10.0.22000.0</SupportedOSPlatformVersion>
     <UseWPF>False</UseWPF>
 	<WindowsPackageType>None</WindowsPackageType>
+	<ApplicationIcon>Decorator.ico</ApplicationIcon>
+	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	<PackageIcon>Decorator.jpg</PackageIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DebugType>full</DebugType>
   </PropertyGroup>
 	
   <ItemGroup>
@@ -92,5 +100,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Dialogs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Assets\Decorator.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 </Project>
