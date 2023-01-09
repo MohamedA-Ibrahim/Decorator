@@ -53,17 +53,37 @@ namespace Decorator.App.Views
         private async void DeleteOrder_Click(object sender, RoutedEventArgs e)
         {
             try
-            { 
+            {
+                var deleteDialog = new ContentDialog
+                {
+                    Title = "هل أنت متأكد من الحذف؟",
+                    Content = "بعد حذف هذه الفاتورة سيتم ارجاع كمية الاصناف الى قيمتها الأصلية",
+                    PrimaryButtonText = "حذف",
+                    CloseButtonText = "الغاء",
+                    DefaultButton = ContentDialogButton.Close,
+                    FlowDirection = FlowDirection.RightToLeft,
+                    XamlRoot = App.Window.Content.XamlRoot
+                };
+
+                ContentDialogResult result = await deleteDialog.ShowAsync();
+
+                if (result != ContentDialogResult.Primary)
+                {
+                    return;
+                }
+
                 var orderToDelete = ViewModel.SelectedOrder;
                 await ViewModel.DeleteOrder(orderToDelete);
+                
+                ViewModel.LoadOrders();
             }
             catch(OrderDeletionException ex)
             {
                 var dialog = new ContentDialog()
                 {
-                    Title = "Unable to delete order",
-                    Content = $"There was an error when we tried to delete " + 
-                        $"invoice #{ViewModel.SelectedOrder.InvoiceNumber}:\n{ex.Message}",
+                    Title = "تعذر الحذف",
+                    Content = $"حدثت مشكلة أثناء حذف " + 
+                        $"فاتورة #{ViewModel.SelectedOrder.InvoiceNumber}:\n{ex.Message}",
                     PrimaryButtonText = "OK"
                 };
                 dialog.XamlRoot = App.Window.Content.XamlRoot;

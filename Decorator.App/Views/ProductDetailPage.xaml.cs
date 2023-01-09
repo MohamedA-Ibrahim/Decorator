@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Decorator.DataAccess;
 using Decorator.App.ViewModels;
 using CommunityToolkit.WinUI.UI.Controls;
+using Decorator.App.Helpers;
 
 namespace Decorator.App.Views
 {
@@ -109,19 +110,6 @@ namespace Decorator.App.Views
             var pd = (sender as Button).DataContext as ProductDimension;
 
             ViewModel.ProductDimensions.Remove(pd);
-            //var result = await ViewModel.RemoveProductDimension(pd);
-
-            //if(result == DeleteResult.InOrder)
-            //{
-            //    var dialog = new ContentDialog()
-            //    {
-            //        Title = "Unable to delete",
-            //        Content = $"The product dimension is already in order!",
-            //        PrimaryButtonText = "OK"
-            //    };
-            //    dialog.XamlRoot = App.Window.Content.XamlRoot;
-            //    await dialog.ShowAsync();
-            //}
         }
 
         private void AddNewRow_Click(object sender, RoutedEventArgs e)
@@ -131,7 +119,6 @@ namespace Decorator.App.Views
             ProductDimensionsGrid.SelectedIndex = ViewModel.ProductDimensions.Count - 1;
             ProductDimensionsGrid.ScrollIntoView(ProductDimensionsGrid.SelectedItem, null);
             ProductDimensionsGrid.Focus(FocusState.Keyboard);
-            //ProductDimensionsGrid.CurrentColumn = ProductDimensionsGrid.Columns[0];
             ProductDimensionsGrid.BeginEdit();
         }
 
@@ -141,6 +128,21 @@ namespace Decorator.App.Views
             {
                 t.Focus(FocusState.Keyboard);
             }
+        }
+
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(ViewModel.ProductName)
+               || string.IsNullOrWhiteSpace(ViewModel.Code)
+               || ViewModel.ProductDimensions.Count == 0)
+            {
+                InfoBarMessges.ShowErrorMessage(InfoBarControl);
+                return;
+            }
+
+            await ViewModel.SaveAsync();
+
+            InfoBarMessges.ShowSuccessMessage(InfoBarControl);
         }
     }
 }

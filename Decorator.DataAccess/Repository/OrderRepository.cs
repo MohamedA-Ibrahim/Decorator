@@ -136,7 +136,25 @@ namespace Decorator.DataAccess
 
         public async Task DeleteAsync(int orderId)
         {
-            await _db.Orders.Where(p => p.Id == orderId).ExecuteDeleteAsync();
+            var order = await _db.Orders
+                                 .Include(x=> x.OrderDetails)
+                                 .ThenInclude(x=> x.ProductDimension)
+                                 .FirstOrDefaultAsync(x=> x.Id == orderId);
+
+            if(order == null)
+                return;
+            
+            foreach (var od in order.OrderDetails)
+            {
+                od.ProductDimension.Quantity += od.Quantity;
+            }
+
+            _db.Remove(order);
+
+            await _db.SaveChangesAsync();
+
+
+            //await _db.Orders.Where(p => p.Id == orderId).ExecuteDeleteAsync();
         }
     }
 }

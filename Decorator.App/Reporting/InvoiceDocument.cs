@@ -125,8 +125,12 @@ namespace Decorator.App.Reporting
                     table.Cell().Element(CellStyle).Text(text =>
                     {
                         text.Span(od.ProductDimension.Product.Name);
-                        text.Span(" - ");
-                        text.Span($"{od.ProductDimension.DimensionX} × {od.ProductDimension.DimensionY}");
+
+                        if(od.ProductDimension.DimensionX != 0 && od.ProductDimension.DimensionY != 0)
+                        {
+                            text.Span(" - ");
+                            text.Span($"{od.ProductDimension.DimensionX} × {od.ProductDimension.DimensionY}");
+                        }
                     });
 
                     table.Cell().Element(CellStyle).AlignCenter().Text($"{od.Quantity}");

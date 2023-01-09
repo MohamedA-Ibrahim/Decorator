@@ -41,8 +41,6 @@ namespace Decorator.App.ViewModels
         /// </summary>
         private static async Task<Order> GetOrder(int orderId) => await App.Repository.Orders.GetAsync(orderId); 
 
-        public bool CanRefresh => Model != null && IsExistingOrder;
-
         /// <summary>
         /// Gets a value that specifies whether the user can revert changes. 
         /// </summary>
@@ -241,7 +239,7 @@ namespace Decorator.App.ViewModels
         /// <summary>
         /// Gets the product list price of the new line item, formatted for display.
         /// </summary>
-        public string NewOrderDetailProductListPriceFormatted => (NewOrderDetail?.ProductDimension?.Price ?? 0).ToString("c");
+        public string NewOrderDetailProductListPriceFormatted => (NewOrderDetail?.ProductDimension?.Price ?? 0).ToString("0.00");
 
         public DateTime PurchaseDate
         {

@@ -116,8 +116,12 @@ namespace Decorator.App.Reporting
                     table.Cell().Element(CellStyle).Text(text =>
                     {
                         text.Span(p.ProductName);
-                        text.Span(" - ");
-                        text.Span($"{p.DimensionX} × {p.DimensionY}");
+
+                        if (p.DimensionX != 0 && p.DimensionY != 0)
+                        {
+                            text.Span(" - ");
+                            text.Span($"{p.DimensionX} × {p.DimensionY}");
+                        }
                     });
 
                     table.Cell().Element(CellStyle).Text(p.CustomerName);

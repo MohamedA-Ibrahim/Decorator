@@ -16,6 +16,7 @@ using System.Diagnostics;
 using CommunityToolkit.WinUI.UI;
 using System.Runtime.InteropServices;
 using Windows.Devices.Input;
+using Decorator.App.Helpers;
 
 namespace Decorator.App.Views
 {
@@ -139,15 +140,15 @@ namespace Decorator.App.Views
             {
                 if (string.IsNullOrWhiteSpace(ViewModel.CustomerName)
                     || string.IsNullOrWhiteSpace(ViewModel.CustomerPhone)
+                    || string.IsNullOrWhiteSpace(ViewModel.CustomerAddress)
                     || ViewModel.OrderDetails.Count == 0)
                 {
-                    ShowErrorMessage();
+                    InfoBarMessges.ShowErrorMessage(InfoBarControl);
                     return;
                 }
 
-
                 await ViewModel.SaveOrderAsync();
-                ShowSuccessMessage();
+                InfoBarMessges.ShowSuccessMessage(InfoBarControl);
                 Bindings.Update();
 
 
@@ -164,21 +165,6 @@ namespace Decorator.App.Views
                 await dialog.ShowAsync();
             }
         }
-
-        private void ShowSuccessMessage()
-        {
-            InfoBarControl.Severity = InfoBarSeverity.Success;
-            InfoBarControl.Message = "تم الحفظ بنجاح";
-            InfoBarControl.IsOpen = true;
-        }
-
-        private void ShowErrorMessage()
-        {
-            InfoBarControl.Severity = InfoBarSeverity.Error;
-            InfoBarControl.Message = "برجاء التأكد من ادخال جميع البيانات";
-            InfoBarControl.IsOpen = true;
-        }
-
         /// <summary>
         /// Queries for products.
         /// </summary>

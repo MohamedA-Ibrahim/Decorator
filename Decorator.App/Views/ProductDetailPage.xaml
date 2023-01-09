@@ -27,7 +27,7 @@
                 RelativePanel.LeftOf="ProductSearchBox"
                 RelativePanel.RightOf="PageTitle">
             <AppBarButton
-                    Click="{x:Bind ViewModel.SaveAsync}"
+                    Click="SaveButton_Click"
                     Icon="Save"
                     Label="حفظ"
                     Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
@@ -211,6 +211,11 @@
 
             </StackPanel>
         </ScrollViewer>
+
+        <uc:AutoClosingInfoBar x:Name="InfoBarControl"
+                     Margin="0 0 5 20"
+                     RelativePanel.AlignRightWithPanel="True"
+                     RelativePanel.AlignBottomWithPanel="True"/>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

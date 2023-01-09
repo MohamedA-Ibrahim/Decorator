@@ -13,6 +13,8 @@ public class ProductDimension : Entity
     public int Quantity { get; set; }
     public float Price { get; set; }
     public ICollection<OrderDetail> OrderDetails { get; set; }
-    public string ProductFullName => $"{Product.Name} - {DimensionX} × {DimensionY} سم";
 
+    public string ProductFullName => (DimensionX == 0 || DimensionY == 0) 
+        ? Product.Name
+        : $"{Product.Name} - {DimensionX} × {DimensionY} سم";
 }
