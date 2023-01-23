@@ -48,6 +48,7 @@
                 </controls:XamlControlsResources.MergedDictionaries>
             </controls:XamlControlsResources>
             </ResourceDictionary.MergedDictionaries>
+            
             <!-- Other app resources here -->
             <SolidColorBrush x:Key="WindowCaptionBackground">Transparent</SolidColorBrush>
             <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Transparent</SolidColorBrush>

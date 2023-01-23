@@ -35,8 +35,7 @@ namespace Decorator.App
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-        public App() { 
-
+        public App() {
             InitializeComponent();
             App.Current.RequestedTheme = ApplicationTheme.Light;
         }
@@ -52,7 +51,6 @@ namespace Decorator.App
 
             // Prepare the app shell and window content.
             AppShell shell = m_window.Content as AppShell ?? new AppShell();
-            shell.Language = ApplicationLanguages.Languages[0];
             m_window.Content = shell;
 
             if (shell.AppFrame.Content == null)

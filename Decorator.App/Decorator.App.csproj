@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Update="Assets\Decorator.db">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
