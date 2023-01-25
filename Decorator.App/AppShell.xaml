@@ -52,21 +52,20 @@
             ItemInvoked="NavigationView_ItemInvoked"
             BackRequested="NavigationView_BackRequested"
             IsBackButtonVisible="Collapsed"
-            IsTitleBarAutoPaddingEnabled="False"
-            >
+            IsTitleBarAutoPaddingEnabled="False">
 
             <muxc:NavigationView.MenuItems>
                 <muxc:NavigationViewItem
                     x:Name="ProductListMenuItem"
                     Content="{x:Bind ProductListLabel}" 
                     ToolTipService.ToolTip="{x:Bind ProductListLabel}"
-                    Icon="ContactInfo"/>
+                    Icon="Shop"/>
 
                 <muxc:NavigationViewItem
                     x:Name="OrderListMenuItem"
                     Content="{x:Bind OrderListLabel}" 
                     ToolTipService.ToolTip="{x:Bind OrderListLabel}"
-                    Icon="Shop"/>
+                    Icon="AllApps"/>
             </muxc:NavigationView.MenuItems>
 
             <!-- In OnNavigatingToPage, we synchronize the selected item in the NavigationView with the current page. -->
