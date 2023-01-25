@@ -186,6 +186,7 @@
                                FontWeight="SemiBold"
                                Text="اسم العميل" />
                     <TextBox
+                             IsSpellCheckEnabled="False"
                              Text="{x:Bind ViewModel.CustomerName, Mode=TwoWay}"
                              IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
 
@@ -196,6 +197,7 @@
                     <TextBox
                             Width="300"
                             AcceptsReturn="True"
+                            IsSpellCheckEnabled="False"
                             Text="{x:Bind ViewModel.CustomerPhone, Mode=TwoWay}"
                             IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"/>
 
@@ -511,6 +513,7 @@
                                 Padding="0,0,0,0"
                                 Text="الخصم" />
                         <TextBox
+                                IsSpellCheckEnabled="False"
                                 Grid.Row="2"
                                 Grid.Column="2"
                                 Margin="0,0,0,0"

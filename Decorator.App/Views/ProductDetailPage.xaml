@@ -89,8 +89,8 @@
                                 Margin="0,8,16,8"
                                 Header="كود المنتج"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
-                               RelativePanel.AlignLeftWithPanel="True"
-
+                                RelativePanel.AlignLeftWithPanel="True"
+                                IsSpellCheckEnabled="False"
                                 Text="{x:Bind ViewModel.Code, Mode=TwoWay}" />
                         
                         <TextBox
@@ -99,6 +99,7 @@
                                 Margin="0,8,16,8"
                                 Header="اسم المنتج"
                                 RelativePanel.RightOf="Code"
+                                IsSpellCheckEnabled="False"
                                 IsReadOnly="{x:Bind vm:Converters.Not(ViewModel.IsInEdit), Mode=OneWay}"
                                 Text="{x:Bind ViewModel.ProductName, Mode=TwoWay}"/>
 
