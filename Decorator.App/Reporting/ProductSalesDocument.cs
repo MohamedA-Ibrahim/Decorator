@@ -69,7 +69,7 @@ namespace Decorator.App.Reporting
                 column.Item().PaddingLeft(5).AlignLeft().Text(text =>
                 {
                     text.Span("الإجمالي: ").SemiBold();
-                    text.Span(totalPrice.ToString("0.00")).DirectionFromLeftToRight();
+                    text.Span(totalPrice.ToString("0")).DirectionFromLeftToRight();
                 });
             });
         }

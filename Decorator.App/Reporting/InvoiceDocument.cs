@@ -75,15 +75,23 @@ namespace Decorator.App.Reporting
 
                 column.Item().Element(ComposeTable);
 
-                var totalPrice = Model.OrderDetails.Sum(x => x.Price * x.Quantity);
+                var grandTotal = Model.OrderDetails.Sum(x => x.Price * x.Quantity);
+                var discount = Model.Discount;
+
+                if (discount != 0)
+                {
+                    column.Item().PaddingLeft(5).AlignLeft().Text(text =>
+                    {
+                        text.Span("الخصم: ").SemiBold();
+                        text.Span(discount.ToString("0")).DirectionFromLeftToRight();
+                    });             
+                }
 
                 column.Item().PaddingLeft(5).AlignLeft().Text(text =>
                 {
                     text.Span("الإجمالي: ").SemiBold();
-                    text.Span(totalPrice.ToString("0.00")).DirectionFromLeftToRight();
+                    text.Span((grandTotal - discount).ToString("0")).DirectionFromLeftToRight();
                 });
-
-                //column.Item().PaddingLeft(5).AlignLeft().Text("الإجمالي:" + totalPrice.ToString()).SemiBold();
 
                column.Item().PaddingTop(25).Element(ComposeComments);
             });
