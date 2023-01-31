@@ -521,6 +521,7 @@
                                 VerticalAlignment="Center"
                                 Background="Transparent"
                                 BorderThickness="0"
+                                IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
                                 Text="{x:Bind ViewModel.Discount, Mode=TwoWay}" />
                         <Border
                                 Grid.Row="3"
