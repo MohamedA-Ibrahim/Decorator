@@ -1,21 +1,22 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.WinUI;
+using Decorator.App.Reporting;
+using Decorator.DataAccess;
+using Microsoft.UI.Dispatching;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.UI.Dispatching;
-using CommunityToolkit.WinUI;
-using Decorator.DataAccess;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace Decorator.App.ViewModels
 {
     public partial class OrderViewModel : ObservableObject
     {
         private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
+        #region Constructor
 
         public OrderViewModel(Order model)
         {
@@ -29,131 +30,22 @@ namespace Decorator.App.ViewModels
             NewOrderDetail = new OrderDetailViewModel();
         }
 
-        /// <summary>
-        /// Creates an OrderViewModel that wraps an Order object created from the specified ID.
-        /// </summary>
-        public async static Task<OrderViewModel> CreateFromId(int orderId) => new OrderViewModel(await GetOrder(orderId));
+        #endregion
 
-        public Order Model { get; }
+        #region Private Binding Fields
 
-        /// <summary>
-        /// Returns the order with the specified ID.
-        /// </summary>
-        private static async Task<Order> GetOrder(int orderId) => await App.Repository.Orders.GetAsync(orderId); 
-
-        /// <summary>
-        /// Gets a value that specifies whether the user can revert changes. 
-        /// </summary>
-        public bool CanRevert => Model != null && IsModified && IsExistingOrder;
-
+        private OrderDetailViewModel _newOrderDetail;
+        private ObservableCollection<OrderDetail> _orderDetails;
         private bool _isInEdit = false;
-
-        public bool IsInEdit
-        {
-            get => _isInEdit;
-            set
-            {
-                if (value != _isInEdit)
-                {              
-                        _isInEdit = value;
-                        OnPropertyChanged();
-                }
-            }
-        }
-        public int Id
-        {
-            get => Model.Id;
-            set
-            {
-                if (Model.Id != value)
-                {
-                    Model.Id = value;
-                    OnPropertyChanged();
-                    IsModified = true;
-                }
-            }
-        }
-
         private bool _IsModified = false;
 
-        /// <summary>
-        /// Gets or sets a value that indicates whether the underlying model has been modified. 
-        /// </summary>
-        public bool IsModified
-        {
-            get => _IsModified;
-            set
-            {
-                if (value != _IsModified)
-                {
-                    // Only record changes after the order has loaded. 
-                    if (IsLoaded)
-                    {
-                        if(IsInEdit)
-                        {
-                            _IsModified = value;
+        #endregion
 
-                        }
-                        else
-                        {
-                            _IsModified = false;
-                        }
+        #region Public Binding Fields
 
-                        OnPropertyChanged();
-                        OnPropertyChanged(nameof(CanRevert));
-                    }
-                }
-            }
-        }
-
-
-        public bool IsExistingOrder => !IsNewOrder;
-
-        /// <summary>
-        /// Gets a value that indicates whether there is a backing order.
-        /// </summary>
-        public bool IsLoaded => Model != null && (IsNewOrder || Model.CustomerName != null);
-
-        /// <summary>
-        /// Gets a value that indicates whether there is not a backing order.
-        /// </summary>
-        public bool IsNotLoaded => !IsLoaded;
-
-        /// <summary>
-        /// Gets a value that indicates whether this is a newly-created order.
-        /// </summary>
-        public bool IsNewOrder => Model.InvoiceNumber == 0;
-
-        /// <summary>
-        /// Gets or sets the invoice number for this order. 
-        /// </summary>
-        public int InvoiceNumber
-        {
-            get => Model.InvoiceNumber;
-            set
-            {
-                if (Model.InvoiceNumber != value)
-                {
-                    Model.InvoiceNumber = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(IsNewOrder));
-                    OnPropertyChanged(nameof(IsLoaded));
-                    OnPropertyChanged(nameof(IsNotLoaded));
-                    OnPropertyChanged(nameof(IsNewOrder));
-                    OnPropertyChanged(nameof(IsExistingOrder));
-                    IsModified = true;
-                }
-            }
-        }
-
-        private ObservableCollection<OrderDetail> _orderDetails;
-        
-        /// <summary>
-        /// Gets the line items in this invoice. 
-        /// </summary>
         public ObservableCollection<OrderDetail> OrderDetails
         {
-            get => _orderDetails; 
+            get => _orderDetails;
             set
             {
                 if (_orderDetails != value)
@@ -174,72 +66,22 @@ namespace Decorator.App.ViewModels
                 }
             }
         }
+        public ObservableCollection<ProductDimension> ProductSuggestions { get; } = new();
+        public Order Model { get; }
 
-        /// <summary>
-        /// Notifies anyone listening to this object that a line item changed. 
-        /// </summary>
-        private void OrderDetails_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        public int Id
         {
-            if (OrderDetails != null)
-            {
-                Model.OrderDetails = OrderDetails.ToList();
-            }
-
-            OnPropertyChanged(nameof(OrderDetails));
-
-            OnPropertyChanged(nameof(SubTotal));
-            OnPropertyChanged(nameof(GrandTotal));
-            IsModified = true;
-
-        }
-
-
-        private OrderDetailViewModel _newOrderDetail;
-
-        /// <summary>
-        /// Gets or sets the line item that the user is currently working on.
-        /// </summary>
-        public OrderDetailViewModel NewOrderDetail
-        {
-            get => _newOrderDetail; 
+            get => Model.Id;
             set
             {
-                if (value != _newOrderDetail)
+                if (Model.Id != value)
                 {
-                    if (value != null)
-                    {
-                        value.PropertyChanged += NewOrderDetail_PropertyChanged;
-                    }
-
-                    if (_newOrderDetail != null)
-                    {
-                        _newOrderDetail.PropertyChanged -= NewOrderDetail_PropertyChanged;
-                    }
-
-                    _newOrderDetail = value;
-                    UpdateNewOrderDetailBindings();
+                    Model.Id = value;
+                    OnPropertyChanged();
+                    IsModified = true;
                 }
             }
         }
-
-        private void NewOrderDetail_PropertyChanged(object sender, PropertyChangedEventArgs e) => UpdateNewOrderDetailBindings();
-
-        private void UpdateNewOrderDetailBindings()
-        {
-            OnPropertyChanged(nameof(NewOrderDetail));
-            OnPropertyChanged(nameof(HasNewOrderDetail));
-            OnPropertyChanged(nameof(NewOrderDetailProductListPriceFormatted));
-        }
-
-        /// <summary>
-        /// Gets or sets whether there is a new order detail in progress.
-        /// </summary>
-        public bool HasNewOrderDetail => NewOrderDetail != null && NewOrderDetail.ProductDimension != null;
-
-        /// <summary>
-        /// Gets the product list price of the new line item, formatted for display.
-        /// </summary>
-        public string NewOrderDetailProductListPriceFormatted => (NewOrderDetail?.ProductDimension?.Price ?? 0).ToString("0.00");
 
         public DateTime PurchaseDate
         {
@@ -254,7 +96,6 @@ namespace Decorator.App.ViewModels
                 }
             }
         }
-
         public string CustomerAddress
         {
             get => Model.CustomerAddress;
@@ -268,7 +109,6 @@ namespace Decorator.App.ViewModels
                 }
             }
         }
-
         public string CustomerName
         {
             get => Model.CustomerName;
@@ -296,8 +136,6 @@ namespace Decorator.App.ViewModels
                 }
             }
         }
-
-
         public float SubTotal => Model.SubTotal;
 
         public float Discount
@@ -316,7 +154,109 @@ namespace Decorator.App.ViewModels
         }
 
         public float GrandTotal => Model.GrandTotal;
+        public bool CanRevert => Model != null && IsModified && IsExistingOrder;
+        public bool IsInEdit
+        {
+            get => _isInEdit;
+            set
+            {
+                if (value != _isInEdit)
+                {              
+                        _isInEdit = value;
+                        OnPropertyChanged();
+                }
+            }
+        }
+        public bool IsModified
+        {
+            get => _IsModified;
+            set
+            {
+                if (value != _IsModified)
+                {
+                    // Only record changes after the order has loaded. 
+                    if (IsLoaded)
+                    {
+                        if(IsInEdit)
+                        {
+                            _IsModified = value;
 
+                        }
+                        else
+                        {
+                            _IsModified = false;
+                        }
+
+                        OnPropertyChanged();
+                        OnPropertyChanged(nameof(CanRevert));
+                    }
+                }
+            }
+        }
+        public bool IsExistingOrder => !IsNewOrder;
+        public bool IsLoaded => Model != null && (IsNewOrder || Model.CustomerName != null);
+        public bool IsNotLoaded => !IsLoaded;
+        public bool IsNewOrder => Model.InvoiceNumber == 0;
+        public bool HasNewOrderDetail => NewOrderDetail != null && NewOrderDetail.ProductDimension != null;
+
+        /// <summary>
+        /// Gets the product list price of the new order detail, formatted for display.
+        /// </summary>
+        public string NewOrderDetailProductListPriceFormatted => (NewOrderDetail?.ProductDimension?.Price ?? 0).ToString("0.00");
+
+        public int InvoiceNumber
+        {
+            get => Model.InvoiceNumber;
+            set
+            {
+                if (Model.InvoiceNumber != value)
+                {
+                    Model.InvoiceNumber = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(IsNewOrder));
+                    OnPropertyChanged(nameof(IsLoaded));
+                    OnPropertyChanged(nameof(IsNotLoaded));
+                    OnPropertyChanged(nameof(IsNewOrder));
+                    OnPropertyChanged(nameof(IsExistingOrder));
+                    IsModified = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the order detail that the user is currently working on.
+        /// </summary>
+        public OrderDetailViewModel NewOrderDetail
+        {
+            get => _newOrderDetail;
+            set
+            {
+                if (value != _newOrderDetail)
+                {
+                    if (value != null)
+                    {
+                        value.PropertyChanged += NewOrderDetail_PropertyChanged;
+                    }
+
+                    if (_newOrderDetail != null)
+                    {
+                        _newOrderDetail.PropertyChanged -= NewOrderDetail_PropertyChanged;
+                    }
+
+                    _newOrderDetail = value;
+                    UpdateNewOrderDetailBindings();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Creates an OrderViewModel that wraps an Order object created from the specified ID.
+        /// </summary>
+        public async static Task<OrderViewModel> CreateFromId(int orderId) => new OrderViewModel(await GetOrder(orderId));
 
         public async Task SaveOrderAsync()
         {
@@ -347,14 +287,6 @@ namespace Decorator.App.ViewModels
             }
         }
 
-        /// <summary>
-        /// Stores the product suggestions. 
-        /// </summary>
-        public ObservableCollection<ProductDimension> ProductSuggestions { get; } = new ();
-
-        /// <summary>
-        /// Queries the database and updates the list of new product suggestions. 
-        /// </summary>
         public async void UpdateProductSuggestions(string queryText)
         {
             ProductSuggestions.Clear();
@@ -369,5 +301,49 @@ namespace Decorator.App.ViewModels
                 }
             }
         }
+
+        #endregion
+
+        #region Reporting
+
+        public void PrintOrderInvoice()
+        {
+            ReportGenerator.GenerateOrderReport(Model);
+        }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Notifies anyone listening to this object that an order detail changed. 
+        /// </summary>
+        private void OrderDetails_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (OrderDetails != null)
+            {
+                Model.OrderDetails = OrderDetails.ToList();
+            }
+
+            OnPropertyChanged(nameof(OrderDetails));
+
+            OnPropertyChanged(nameof(SubTotal));
+            OnPropertyChanged(nameof(GrandTotal));
+            IsModified = true;
+        }
+        private void NewOrderDetail_PropertyChanged(object sender, PropertyChangedEventArgs e) => UpdateNewOrderDetailBindings();
+        private void UpdateNewOrderDetailBindings()
+        {
+            OnPropertyChanged(nameof(NewOrderDetail));
+            OnPropertyChanged(nameof(HasNewOrderDetail));
+            OnPropertyChanged(nameof(NewOrderDetailProductListPriceFormatted));
+        }
+
+        /// <summary>
+        /// Returns the order with the specified ID.
+        /// </summary>
+        private static async Task<Order> GetOrder(int orderId) => await App.Repository.Orders.GetAsync(orderId);
+
+        #endregion
     }
 }
