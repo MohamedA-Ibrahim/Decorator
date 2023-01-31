@@ -67,13 +67,6 @@ namespace Decorator.App.Views
         }
 
 
-        /// <summary>
-        /// Reloads the order.
-        /// </summary>
-        private async void RefreshButton_Click(object sender, RoutedEventArgs e) => 
-            ViewModel = await OrderViewModel.CreateFromId(ViewModel.Id);
-
-
         private void PrintButton_Click(object sender, RoutedEventArgs e)
         {
             var document = new InvoiceDocument(ViewModel.Model);
@@ -154,8 +147,6 @@ namespace Decorator.App.Views
                 await ViewModel.SaveOrderAsync();
                 InfoBarMessges.ShowSuccessMessage(InfoBarControl);
                 Bindings.Update();
-
-
             }
             catch (OrderSavingException ex)
             {

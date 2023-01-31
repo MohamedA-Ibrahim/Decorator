@@ -51,7 +51,10 @@
                     Icon="Delete"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"
                     Label="حذف" />
-
+            <AppBarButton
+                    Click="{x:Bind ViewModel.LoadOrders}"
+                    Icon="Refresh"
+                    Label="تحديث" />
             <AppBarSeparator/>
 
             <AppBarButton

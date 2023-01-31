@@ -47,7 +47,7 @@ namespace Decorator.App.Reporting
                     });
                 });
 
-                row.ConstantItem(100).Image("Assets/Decorator.jpg");
+                row.ConstantItem(130).Image("Assets/Decorator.jpg");
             });
         }
 

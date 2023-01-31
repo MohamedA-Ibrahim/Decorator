@@ -51,6 +51,11 @@
                     Label="اضافة"
                     ToolTipService.ToolTip="منتج جديد" />
 
+            <AppBarButton
+                    Click="{x:Bind ViewModel.GetProductListAsync}"
+                    Icon="Refresh"
+                    Label="تحديث" />
+
         </CommandBar>
 
         <uc:CollapsibleSearchBox
