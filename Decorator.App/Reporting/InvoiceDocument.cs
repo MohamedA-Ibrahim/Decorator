@@ -24,7 +24,7 @@ namespace Decorator.App.Reporting
             container           
                .Page(page =>
                {
-                   page.DefaultTextStyle(x => x.FontFamily("Arial").FontSize(16));
+                   page.DefaultTextStyle(x => x.FontFamily("Arial").FontSize(14));
                    page.ContentFromRightToLeft();
                    page.Margin(50);
                    page.Header().Element(ComposeHeader);

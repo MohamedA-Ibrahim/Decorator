@@ -23,7 +23,7 @@ namespace Decorator.App.Reporting
                 
                .Page(page =>
                {
-                   page.DefaultTextStyle(x => x.FontFamily("Calibri"));
+                   page.DefaultTextStyle(x => x.FontFamily("Arial").FontSize(14));
                    page.ContentFromRightToLeft();
                    page.Margin(20);
                    page.Header().Element(ComposeHeader);
