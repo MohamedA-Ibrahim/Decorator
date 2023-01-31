@@ -52,6 +52,7 @@
     <PackageReference Include="NLog" Version="5.1.1" />
     <PackageReference Include="PInvoke.User32" Version="0.7.124" />
     <PackageReference Include="QuestPDF" Version="2022.12.0" />
+    <PackageReference Include="WinUIEX" Version="2.1.0" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
