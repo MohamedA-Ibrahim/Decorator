@@ -1,27 +1,23 @@
-using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using Decorator.App.Helpers;
+using Decorator.App.Reporting;
+using Decorator.App.ViewModels;
+using Decorator.DataAccess;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.ApplicationModel.Email;
-using Decorator.DataAccess;
-using Decorator.App.ViewModels;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Decorator.App.Reporting;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using QuestPDF.Fluent;
+using System;
+using System.ComponentModel;
 using System.Diagnostics;
-using CommunityToolkit.WinUI.UI;
-using System.Runtime.InteropServices;
-using Windows.Devices.Input;
-using Decorator.App.Helpers;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Decorator.App.Views
 {
     public sealed partial class OrderDetailPage : Page, INotifyPropertyChanged
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
         public OrderDetailPage() => InitializeComponent();
 
         private OrderViewModel _viewModel;
@@ -87,19 +83,29 @@ namespace Decorator.App.Views
 
         static void GenerateDocumentAndShow(InvoiceDocument document)
         {
-            const string filePath = "invoice.pdf";
-
-            document.GeneratePdf(filePath);
-
-            var process = new Process
+            try
             {
-                StartInfo = new ProcessStartInfo(filePath)
-                {
-                    UseShellExecute = true
-                }
-            };
+                logger.Info("Started generating report");
 
-            process.Start();
+                string filePath = "Invoice.pdf";
+
+                document.GeneratePdf(filePath);
+
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo(filePath)
+                    {
+                        UseShellExecute = true
+                    }
+                };
+
+                process.Start();
+            }
+            catch(Exception ex)
+            {
+                logger.Error(ex);
+            }
+
         }
 
         /// <summary>
