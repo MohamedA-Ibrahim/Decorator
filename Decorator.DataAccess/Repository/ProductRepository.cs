@@ -82,6 +82,8 @@ public class ProductRepository : IProductRepository
             // Get the list of the dimensions that were removed from the existing product
             var removedDimensions = existing.ProductDimensions.Exclude(product.ProductDimensions, i => i.Id).ToList();
 
+            var existingDimensions = existing.ProductDimensions.Except(removedDimensions);
+
 
             foreach (var doc in removedDimensions)
             {
@@ -99,6 +101,13 @@ public class ProductRepository : IProductRepository
 
                 // Create the relation between the batch and document
                 existing.ProductDimensions.Add(pd);
+            }
+
+            foreach (var pd in existingDimensions)
+            {
+                int modfiedQuantity = product.ProductDimensions.FirstOrDefault(x => x.Id == pd.Id).Quantity;
+                
+                pd.Quantity = modfiedQuantity;
             }
 
             // Overwrite all property current values from modified product' entity values, 
