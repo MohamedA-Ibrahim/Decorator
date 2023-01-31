@@ -145,8 +145,6 @@ namespace Decorator.App.Views
             try
             {
                 if (string.IsNullOrWhiteSpace(ViewModel.CustomerName)
-                    || string.IsNullOrWhiteSpace(ViewModel.CustomerPhone)
-                    || string.IsNullOrWhiteSpace(ViewModel.CustomerAddress)
                     || ViewModel.OrderDetails.Count == 0)
                 {
                     InfoBarMessges.ShowErrorMessage(InfoBarControl);
