@@ -21,6 +21,11 @@
                 Click="MenuFlyoutViewDetails_Click"
                 Icon="OpenFile"
                 Text="عرض التفاصيل" />
+
+            <MenuFlyoutItem
+                Click="PrintButton_Click"
+                Icon="Print"
+                Text="طباعة الفاتورة" />
         </MenuFlyout>
     </Page.Resources>
 
@@ -38,9 +43,9 @@
                 DefaultLabelPosition="Right"
                 RelativePanel.LeftOf="OrderSearchBox"
                 RelativePanel.RightOf="PageTitle">
+            
             <AppBarButton
-                    x:Name="CommandBarEditButton"
-                
+                    x:Name="CommandBarEditButton"                
                     Click="EditButton_Click"
                     Icon="Edit"
                     IsEnabled="{x:Bind vm:Converters.IsNotNull(ViewModel.SelectedOrder), Mode=OneWay}"

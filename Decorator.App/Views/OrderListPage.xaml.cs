@@ -9,6 +9,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Decorator.DataAccess;
 using Decorator.App.ViewModels;
 using System.Linq;
+using Decorator.App.Reporting;
 
 namespace Decorator.App.Views
 {
@@ -193,6 +194,11 @@ namespace Decorator.App.Views
         private void AddOrder_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(OrderDetailPage));
+        }
+
+        private void PrintButton_Click(object sender, RoutedEventArgs e)
+        {
+            ReportGenerator.GenerateOrderReport(ViewModel.SelectedOrder);
         }
     }
 }

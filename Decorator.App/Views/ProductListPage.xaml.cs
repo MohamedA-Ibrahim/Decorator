@@ -170,22 +170,7 @@ namespace Decorator.App.Views
         private async Task PrintReport(int productId, DateTime dateFrom, DateTime dateTo)
         {
             var productSales = await App.Repository.Products.GetProductOrdersAsync(productId, dateFrom, dateTo);
-
-            var document = new ProductSalesDocument(productSales.ToList());
-
-            const string filePath = "invoice.pdf";
-
-            document.GeneratePdf(filePath);
-
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo(filePath)
-                {
-                    UseShellExecute = true
-                }
-            };
-
-            process.Start();
+            ReportGenerator.GenerateProductReport(productSales.ToList());
         }
 
         private void DataGrid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) =>

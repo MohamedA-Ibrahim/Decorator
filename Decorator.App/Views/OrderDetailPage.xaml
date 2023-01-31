@@ -145,7 +145,7 @@
             <AppBarSeparator/>
 
             <AppBarButton
-                    Click="PrintButton_Click"
+                    Click="{x:Bind ViewModel.PrintOrderInvoice}"
                     Icon="Print"
                     IsEnabled="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay}"
                     Label="طباعة" />

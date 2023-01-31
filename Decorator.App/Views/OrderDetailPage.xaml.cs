@@ -16,8 +16,6 @@ namespace Decorator.App.Views
 {
     public sealed partial class OrderDetailPage : Page, INotifyPropertyChanged
     {
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-
         public OrderDetailPage() => InitializeComponent();
 
         private OrderViewModel _viewModel;
@@ -64,41 +62,6 @@ namespace Decorator.App.Views
             }
 
             base.OnNavigatedTo(e);
-        }
-
-
-        private void PrintButton_Click(object sender, RoutedEventArgs e)
-        {
-            var document = new InvoiceDocument(ViewModel.Model);
-            GenerateDocumentAndShow(document);
-        }
-
-
-        static void GenerateDocumentAndShow(InvoiceDocument document)
-        {
-            try
-            {
-                logger.Info("Started generating report");
-
-                string filePath = "Invoice.pdf";
-
-                document.GeneratePdf(filePath);
-
-                var process = new Process
-                {
-                    StartInfo = new ProcessStartInfo(filePath)
-                    {
-                        UseShellExecute = true
-                    }
-                };
-
-                process.Start();
-            }
-            catch(Exception ex)
-            {
-                logger.Error(ex);
-            }
-
         }
 
         /// <summary>

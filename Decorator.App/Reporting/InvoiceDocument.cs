@@ -139,7 +139,7 @@ namespace Decorator.App.Reporting
 
         private void ComposeComments(IContainer container)
         {
-            container.ShowEntire().Background(Colors.Grey.Lighten3).Padding(10).Column(column =>
+            container.ShowEntire().Background(Colors.LightBlue.Lighten3).Padding(10).Column(column =>
             {
                 column.Spacing(5);
                 column.Item().Text("استلمت انا البضاعة عالية الجودة وسليمة وبحالة ممتازة وفقا للطلبية المتفق عليها ").FontSize(16).SemiBold();
