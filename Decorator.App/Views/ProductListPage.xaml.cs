@@ -103,10 +103,9 @@ namespace Decorator.App.Views
             string[] parameters = text.Split(new char[] { ' ' },
                 StringSplitOptions.RemoveEmptyEntries);
 
-            var matches = ViewModel.Products.Where(product => parameters
-                .Any(parameter =>
-                    product.ProductName.StartsWith(parameter) ||
-                    product.Code.StartsWith(parameter)))
+            var matches = ViewModel.Products.Where(product => 
+                    product.ProductName.StartsWith(text) ||
+                    product.Code.StartsWith(text))
                 .OrderByDescending(product => parameters.Count(parameter =>
                     product.ProductName.StartsWith(parameter) ||
                     product.Code.StartsWith(parameter)))
