@@ -21,22 +21,15 @@ namespace Decorator.App.Reporting
 
         public void Compose(IDocumentContainer container)
         {
-            container
-                
+            container           
                .Page(page =>
                {
-                   page.DefaultTextStyle(x => x.FontFamily("Calibri"));
+                   page.DefaultTextStyle(x => x.FontFamily("Arial").FontSize(16));
                    page.ContentFromRightToLeft();
                    page.Margin(50);
                    page.Header().Element(ComposeHeader);
                    page.Content().Element(ComposeContent);
-
-                   page.Footer().AlignCenter().Text(text =>
-                   {
-                       text.CurrentPageNumber();
-                       text.Span(" / ");
-                       text.TotalPages();
-                   });
+                   page.Footer().AlignCenter().Element(ComposeComments);
                });
 
         }
@@ -47,10 +40,6 @@ namespace Decorator.App.Reporting
             {
                 row.RelativeItem().Column(Column =>
                 {
-                    Column
-                        .Item().Text($"فاتورة #{Model.InvoiceNumber}")
-                        .FontSize(20).SemiBold().FontColor(Colors.Blue.Medium);
-
                     Column.Item().Text(text =>
                     {
                         text.Span("تاريخ الفاتورة: ").SemiBold();
@@ -87,13 +76,11 @@ namespace Decorator.App.Reporting
                     });             
                 }
 
-                column.Item().PaddingLeft(5).AlignLeft().Text(text =>
+                column.Item().PaddingTop(3).PaddingLeft(5).AlignLeft().Text(text =>
                 {
                     text.Span("الإجمالي: ").SemiBold();
                     text.Span((grandTotal - discount).ToString("0")).DirectionFromLeftToRight();
                 });
-
-               column.Item().PaddingTop(25).Element(ComposeComments);
             });
         }
 
