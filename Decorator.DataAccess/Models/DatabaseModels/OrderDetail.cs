@@ -12,7 +12,7 @@ namespace Decorator.DataAccess
 
         public ProductDimension ProductDimension { get;set; }
 
-        public int Quantity { get; set; } = 1;
+        public float Quantity { get; set; } = 1;
         public float Price { get; set; }
     }
 }

@@ -105,7 +105,7 @@ public class ProductRepository : IProductRepository
 
             foreach (var pd in existingDimensions)
             {
-                int modfiedQuantity = product.ProductDimensions.FirstOrDefault(x => x.Id == pd.Id).Quantity;
+                var modfiedQuantity = product.ProductDimensions.FirstOrDefault(x => x.Id == pd.Id).Quantity;
                 
                 pd.Quantity = modfiedQuantity;
             }

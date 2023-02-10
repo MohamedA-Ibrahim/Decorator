@@ -10,7 +10,7 @@ public class ProductDimension : Entity
     public int ProductId { get; set; }
     public float DimensionX { get; set; }
     public float DimensionY { get; set; }
-    public int Quantity { get; set; }
+    public float Quantity { get; set; }
     public float Price { get; set; }
     public ICollection<OrderDetail> OrderDetails { get; set; }
 

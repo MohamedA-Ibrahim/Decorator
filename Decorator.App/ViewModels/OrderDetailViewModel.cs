@@ -27,7 +27,7 @@ namespace Decorator.App.ViewModels
             }
         }
 
-        public int Quantity
+        public float Quantity
         {
             get => Model.Quantity;
             set

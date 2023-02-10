@@ -107,9 +107,9 @@ namespace Decorator.DataAccess
 
                 foreach (OrderDetail od in existingOrderDetails)
                 {
-                    int modfiedQuantity = order.OrderDetails.FirstOrDefault(x => x.Id == od.Id).Quantity;
-                    int orginalQuantity = od.Quantity;
-                    int difference = orginalQuantity - modfiedQuantity;
+                    var modfiedQuantity = order.OrderDetails.FirstOrDefault(x => x.Id == od.Id).Quantity;
+                    var orginalQuantity = od.Quantity;
+                    var difference = orginalQuantity - modfiedQuantity;
 
                     //Check if there is a change in quantity
                     //and increase/decrease the stock in ProductDimension

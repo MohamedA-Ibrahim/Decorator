@@ -391,6 +391,7 @@
                                     HorizontalAlignment="Right"
                                     Minimum="1"
                                     Maximum="{x:Bind ViewModel.NewOrderDetail.ProductDimension.Quantity, Mode=OneWay}"
+                                    SmallChange="0.5"
                                     LargeChange="5"
                                     SpinButtonPlacementMode="Compact"
                                     Text="{x:Bind ViewModel.NewOrderDetail.Quantity, Mode=TwoWay}"/>
