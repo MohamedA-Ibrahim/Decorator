@@ -4,8 +4,6 @@ using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using System;
-using System.Globalization;
 using System.Linq;
 
 namespace Decorator.App.Reporting
@@ -40,11 +38,9 @@ namespace Decorator.App.Reporting
             {
                 row.RelativeItem().Column(Column =>
                 {
-                    Column.Item().Text(text =>
-                    {
-                        text.Span("تاريخ الفاتورة: ").SemiBold();
-                        text.Span($"{Model.PurchaseDate:d}");
-                    });
+                    Column.Item().Text("Decorator").FontFamily("SimSun").FontSize(32).SemiBold();
+                    Column.Item().Text("لجميع مستلزمات الديكور").FontSize(18).SemiBold();
+
                 });
 
                 row.ConstantItem(130).Image("Assets/Decorator.jpg");
@@ -189,16 +185,27 @@ namespace Decorator.App.Reporting
                     text.Span(Model.CustomerName);
                 });
 
-                column.Item().Text(text =>
+                if (!string.IsNullOrWhiteSpace(Model.CustomerName))
                 {
-                    text.Span("عنوان العميل: ").SemiBold();
-                    text.Span(Model.CustomerAddress);
-                });
+                    column.Item().Text(text =>
+                    {
+                        text.Span("عنوان العميل: ").SemiBold();
+                        text.Span(Model.CustomerAddress);
+                    });
+                }
+                if (!string.IsNullOrWhiteSpace(Model.CustomerPhone))
+                {
+                    column.Item().Text(text =>
+                    {
+                        text.Span("رقم الهاتف: ").SemiBold();
+                        text.Span(Model.CustomerPhone);
+                    });
+                }
 
                 column.Item().Text(text =>
                 {
-                    text.Span("رقم الهاتف: ").SemiBold();
-                    text.Span(Model.CustomerPhone);
+                    text.Span("تاريخ الفاتورة: ").SemiBold();
+                    text.Span($"{Model.PurchaseDate:d}");
                 });
             });
         }
