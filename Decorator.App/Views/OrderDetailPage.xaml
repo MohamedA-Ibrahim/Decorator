@@ -389,7 +389,7 @@
                                 <muxc:NumberBox
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
-                                    Minimum="1"
+                                    Minimum="0.25"
                                     Maximum="{x:Bind ViewModel.NewOrderDetail.ProductDimension.Quantity, Mode=OneWay}"
                                     SmallChange="0.5"
                                     LargeChange="5"
