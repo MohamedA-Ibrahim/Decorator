@@ -179,7 +179,7 @@
                             </toolkit:DataGridTemplateColumn>
 
                             <toolkit:DataGridTemplateColumn
-                                    Header="اجمالي السعر"
+                                    Header="اجمالي الفاتورة"
                                     Tag="GrandTotal">
                                 <toolkit:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate x:DataType="models:Order">
@@ -187,6 +187,32 @@
                                                 VerticalAlignment="Center"
                                                 Margin="12,0"
                                                 Text="{x:Bind sys:String.Format('\{0:c\}', GrandTotal)}"/>
+                                    </DataTemplate>
+                                </toolkit:DataGridTemplateColumn.CellTemplate>
+                            </toolkit:DataGridTemplateColumn>
+
+                            <toolkit:DataGridTemplateColumn
+                                    Header="المدفوع"
+                                    Tag="PaidAmount">
+                                <toolkit:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:Order">
+                                        <TextBlock 
+                                                VerticalAlignment="Center"
+                                                Margin="12,0"
+                                                Text="{x:Bind sys:String.Format('\{0:c\}', PaidAmount)}"/>
+                                    </DataTemplate>
+                                </toolkit:DataGridTemplateColumn.CellTemplate>
+                            </toolkit:DataGridTemplateColumn>
+
+                            <toolkit:DataGridTemplateColumn
+                                    Header="المتبقي"
+                                    Tag="UnpaidAmount">
+                                <toolkit:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate x:DataType="models:Order">
+                                        <TextBlock 
+                                                VerticalAlignment="Center"
+                                                Margin="12,0"
+                                                Text="{x:Bind sys:String.Format('\{0:c\}', UnpaidAmount)}"/>
                                     </DataTemplate>
                                 </toolkit:DataGridTemplateColumn.CellTemplate>
                             </toolkit:DataGridTemplateColumn>

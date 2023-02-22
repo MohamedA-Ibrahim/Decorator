@@ -61,8 +61,12 @@ namespace Decorator.App.Reporting
 
                 column.Item().Element(ComposeTable);
 
-                var grandTotal = Model.CustomOrderItems.Sum(x => x.Price * x.Quantity);
+
+                var subTotal = Model.CustomOrderItems.Sum(x => x.Price * x.Quantity);
                 var discount = Model.Discount;
+                var grandTotal = subTotal - discount;
+                var paidAmount = Model.PaidAmount;
+                var unpaidAmount = grandTotal - paidAmount;
 
                 if (discount != 0)
                 {
@@ -70,14 +74,29 @@ namespace Decorator.App.Reporting
                     {
                         text.Span("الخصم: ").SemiBold();
                         text.Span(discount.ToString("0")).DirectionFromLeftToRight();
-                    });             
+                    });
                 }
 
                 column.Item().PaddingTop(3).PaddingLeft(5).AlignLeft().Text(text =>
                 {
                     text.Span("الإجمالي: ").SemiBold();
-                    text.Span((grandTotal - discount).ToString("0")).DirectionFromLeftToRight();
+                    text.Span(grandTotal.ToString("0")).DirectionFromLeftToRight();
                 });
+
+                if (paidAmount != 0)
+                {
+                    column.Item().PaddingTop(3).PaddingLeft(5).AlignLeft().Text(text =>
+                    {
+                        text.Span("المدفوع: ").SemiBold();
+                        text.Span(paidAmount.ToString("0")).DirectionFromLeftToRight();
+                    });
+
+                    column.Item().PaddingTop(3).PaddingLeft(5).AlignLeft().Text(text =>
+                    {
+                        text.Span("المتبقي: ").SemiBold();
+                        text.Span(unpaidAmount.ToString("0")).DirectionFromLeftToRight();
+                    });
+                }
             });
         }
 

@@ -14,14 +14,14 @@
     x:Name="workaroundNameForPage">
 
     <Page.Resources>
-        
+
         <Style TargetType="ComboBox" BasedOn="{StaticResource DefaultComboBoxStyle}">
             <Setter Property="MinWidth" Value="150" />
         </Style>
 
         <DataTemplate x:Key="DefaultOrderDetailTemplate"
             x:DataType="models:OrderDetail">
-            
+
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="350" />
@@ -31,12 +31,12 @@
                     <ColumnDefinition Width="32" />
                     <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
-                
+
                 <Border
                     Grid.ColumnSpan="4"
                     BorderBrush="LightGray"
                     BorderThickness="0,0,0,1" />
-                
+
                 <!--Order Products-->
                 <TextBlock
                     Grid.Column="0"
@@ -91,47 +91,47 @@
                         </ResourceDictionary>
                     </Button.Resources>
                 </Button>
-                
+
             </Grid>
         </DataTemplate>
 
 
     </Page.Resources>
 
-        <RelativePanel>
-            <!--  Page title section  -->
-            <StackPanel
+    <RelativePanel>
+        <!--  Page title section  -->
+        <StackPanel
                 x:Name="PageTitle"
                 Orientation="Horizontal"
                 Margin="0,4,0,0">
-                <TextBlock
+            <TextBlock
                     Margin="0"
                     Style="{StaticResource PageTitleTextBlockStyle}"
                     Text="طلبية #"
                     Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay}" />
-                <TextBlock
+            <TextBlock
                     Margin="0"
                     Style="{StaticResource PageTitleTextBlockStyle}"
                     Text="{x:Bind ViewModel.InvoiceNumber, Mode=OneWay}"
                     Visibility="{x:Bind ViewModel.IsExistingOrder, Mode=OneWay}" />
-                
-                <TextBlock
+
+            <TextBlock
                     Margin="0"
                     Style="{StaticResource PageTitleTextBlockStyle}"
                     Text="طلبية جديدة"
                     Visibility="{x:Bind ViewModel.IsNewOrder, Mode=OneWay}" />
 
-                
+
         </StackPanel>
 
-            <CommandBar
+        <CommandBar
                 x:Name="MainCommandBar"
                 Margin="0,0,0,0"
                 Background="Transparent"
                 DefaultLabelPosition="Right"
                 RelativePanel.AlignRightWithPanel="True"
                 RelativePanel.RightOf="PageTitle">
-                <AppBarButton
+            <AppBarButton
                     x:Name="SaveOrderButton"
                     Click="SaveButton_Click"
                     IsEnabled="{x:Bind ViewModel.IsModified, Mode=OneWay}"
@@ -151,33 +151,33 @@
                     Label="طباعة" />
         </CommandBar>
 
-            <!--  Order body  -->
-            <ScrollViewer
+        <!--  Order body  -->
+        <ScrollViewer
                 x:Name="orderBody"
                 RelativePanel.AlignBottomWithPanel="True"
                 RelativePanel.AlignLeftWithPanel="True"
                 RelativePanel.AlignRightWithPanel="True"
                 RelativePanel.Below="PageTitle">
-                <Grid
+            <Grid
                     d:IsHidden="True"
                     Visibility="{x:Bind ViewModel.IsLoaded, Mode=OneWay}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition
                             Width="*"
                             MinWidth="50"
                             MaxWidth="300" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
 
-                    <!--  Customer info section  -->
+                <!--  Customer info section  -->
                 <StackPanel
                         x:Name="customerInfoPanel"
                         Margin="0,20,0,0">
@@ -193,7 +193,7 @@
                     <TextBlock Margin="0,20,0,2"
                                FontWeight="SemiBold"
                                Text="رقم الهاتف"/>
-                    
+
                     <TextBox
                             Width="300"
                             AcceptsReturn="True"
@@ -216,7 +216,7 @@
 
                 </StackPanel>
 
-                    <!--  Order status and payment info section  -->
+                <!--  Order status and payment info section  -->
                 <StackPanel
                         x:Name="StatusPanel"
                         Grid.RowSpan="2"
@@ -225,13 +225,13 @@
                         HorizontalAlignment="Right">
 
                     <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
                         <TextBlock
                                 Grid.Row="0"
@@ -247,38 +247,38 @@
                     </Grid>
 
 
-                    </StackPanel>
+                </StackPanel>
 
-                    <!--  Line items section  -->
-                    <StackPanel
+                <!--  Line items section  -->
+                <StackPanel
                         x:Name="sp1"
                         Grid.Row="2"
                         Grid.ColumnSpan="3"
                         Margin="0,40,0,0"
                         HorizontalAlignment="Stretch">
 
-                        <!--  Line items header  -->
-                        <Grid
+                    <!--  Line items header  -->
+                    <Grid
                             x:Name="DefaultOrderDetailsHeader"
                             Margin="0,20,0,0"
                             HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="250" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="80" />
-                                <ColumnDefinition Width="80" />
-                                <ColumnDefinition Width="32" />
-                                <ColumnDefinition Width="32" />
-                            </Grid.ColumnDefinitions>
-                            <Border
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="80" />
+                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="32" />
+                        </Grid.ColumnDefinitions>
+                        <Border
                                 Grid.ColumnSpan="4"
                                 BorderBrush="LightGray"
                                 BorderThickness="0,0,0,1" />
-                            <TextBlock
+                        <TextBlock
                                 Grid.Column="0"
                                 FontWeight="SemiBold"
                                 Text="اسم المنتج" />
-                            <TextBlock
+                        <TextBlock
                                 Grid.Column="2"
                                 Margin="8,0,0,0"
                                 Padding="0,0,0,0"
@@ -286,7 +286,7 @@
                                 VerticalAlignment="Bottom"
                                 FontWeight="SemiBold"
                                 Text="السعر" />
-                            <TextBlock
+                        <TextBlock
                                 Grid.Column="3"
                                 Margin="8,0,0,0"
                                 Padding="0,0,0,0"
@@ -294,39 +294,39 @@
                                 VerticalAlignment="Bottom"
                                 FontWeight="SemiBold"
                                 Text="الكمية" />
-                        </Grid>
+                    </Grid>
 
-                        <!--  order detail list  -->
-                        <ListView
+                    <!--  order detail list  -->
+                    <ListView
                             x:Name="OrderDetailListView"
                             ItemTemplate="{StaticResource DefaultOrderDetailTemplate}"
                             ItemsSource="{x:Bind ViewModel.OrderDetails, Mode=OneWay}"
                             SelectionMode="None">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem"
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem"
                                        BasedOn="{StaticResource DefaultListViewItemStyle}">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    <Setter Property="Margin" Value="0,0,0,0" />
-                                    <Setter Property="Padding" Value="0,0,0,0" />
-                                    <Setter Property="MinHeight" Value="0" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Margin" Value="0,0,0,0" />
+                                <Setter Property="Padding" Value="0,0,0,0" />
+                                <Setter Property="MinHeight" Value="0" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
 
-                        <!--  New product section  -->
-                        <Grid
+                    <!--  New product section  -->
+                    <Grid
                             Margin="0,20,0,0"
                             HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="350" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="350" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
 
                         <AutoSuggestBox 
                                 x:Name="ProductSearchBox"
@@ -338,16 +338,16 @@
                                 Visibility="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
                                 SuggestionChosen="ProductSearchBox_SuggestionChosen"
                                 TextChanged="ProductSearchBox_TextChanged">
-                                
-                                <!-- Search box design-->
+
+                            <!-- Search box design-->
                             <AutoSuggestBox.ItemTemplate>
                                 <DataTemplate x:DataType="models:ProductDimension">
-                                        <Grid HorizontalAlignment="Stretch">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
+                                    <Grid HorizontalAlignment="Stretch">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <TextBlock
@@ -364,29 +364,29 @@
                                                 HorizontalAlignment="Right"
                                                 Text="{x:Bind sys:String.Format('\{0:0.00\}', Price)}"/>
                                     </Grid>
-                                    
-                                    </DataTemplate>
-                                </AutoSuggestBox.ItemTemplate>
-                                <AutoSuggestBox.ItemContainerStyle>
+
+                                </DataTemplate>
+                            </AutoSuggestBox.ItemTemplate>
+                            <AutoSuggestBox.ItemContainerStyle>
                                 <Style TargetType="ListViewItem"
                                        BasedOn="{StaticResource DefaultListViewItemStyle}">
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                    </Style>
-                                </AutoSuggestBox.ItemContainerStyle>
-                            </AutoSuggestBox>  
-                            
-                            <Grid x:Name="ItemQtyPanel"
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </AutoSuggestBox.ItemContainerStyle>
+                        </AutoSuggestBox>
+
+                        <Grid x:Name="ItemQtyPanel"
                                 Grid.Column="2"
                                 Visibility="{x:Bind ViewModel.HasNewOrderDetail, Mode=OneWay}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="80" />
-                                    <ColumnDefinition Width="80" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="80" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Text="{x:Bind ViewModel.NewOrderDetailProductListPriceFormatted, Mode=OneWay}"/>
-                                <muxc:NumberBox
+                            <muxc:NumberBox
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     Minimum="0.25"
@@ -395,14 +395,14 @@
                                     LargeChange="5"
                                     SpinButtonPlacementMode="Compact"
                                     Text="{x:Bind ViewModel.NewOrderDetail.Quantity, Mode=TwoWay}"/>
-                            </Grid>
-                            
-                            <Grid x:Name="ItemAddPanel"
+                        </Grid>
+
+                        <Grid x:Name="ItemAddPanel"
                                 Grid.Column="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="32" />
-                                    <ColumnDefinition Width="32" />
-                                </Grid.ColumnDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32" />
+                                <ColumnDefinition Width="32" />
+                            </Grid.ColumnDefinitions>
                             <Button
                                     Grid.Column="0"
                                     Margin="4,0,0,0"
@@ -468,36 +468,41 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        </Grid>
+                    </Grid>
 
-                        <Grid
+                    <Grid
                             x:Name="totalsPanel"
                             Margin="0,20,64,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition
                                     x:Name="SpacerColumn"
                                     Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <TextBlock
                                 Grid.Column="1"
-                                Margin="0,0,20,0"
+                                Margin="0,0,0,0"
                                 Padding="0,0,0,0"
-                                HorizontalAlignment="Right"
-                                Text="اجمالي قبل الخصم" />
+                                Foreground="Green"
+                                FontWeight="Bold"
+                                Text="اجمالي السعر" />
                         <TextBlock
                                 Grid.Column="2"
                                 Margin="0,0,0,0"
                                 Padding="0,0,0,0"
+                                Foreground="Green"
+                                FontWeight="Bold"
                                 HorizontalAlignment="Right"
                                 Text="{x:Bind sys:String.Format('\{0:0.00\}', ViewModel.SubTotal), Mode=OneWay}" />
                         <Border
@@ -520,42 +525,75 @@
                                 Margin="0,0,0,0"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                Background="Transparent"
                                 BorderThickness="0"
                                 IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
                                 Text="{x:Bind ViewModel.Discount, Mode=TwoWay}" />
-                        <Border
+
+                        <TextBlock
                                 Grid.Row="3"
+                                Grid.Column="1"
+                                Margin="0,0,15,0"
+                                Padding="0,0,0,0"
+                                Text="إجمالي بعد الخصم" />
+                        <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="2"
+                                Margin="0,0,0,0"
+                                Padding="0,0,0,0"
+                                HorizontalAlignment="Right"
+                                Text="{x:Bind sys:String.Format('\{0:0.00\}', ViewModel.GrandTotal), Mode=OneWay}" />
+
+                        <Border
+                                Grid.Row="4"
                                 Grid.Column="1"
                                 Grid.ColumnSpan="2"
                                 Margin ="0 5 0 0"
                                 BorderBrush="LightGray"
                                 BorderThickness="0,0,0,1" />
-                            <TextBlock
-                                Grid.Row="4"
+
+                        <TextBlock
+                                Grid.Row="5"
                                 Grid.Column="1"
-                                Margin="0,0,20,0"
+                                Margin="0,10,0,0"
+                                Padding="0,0,0,0"
+                                Text="المدفوع" />
+                        <TextBox
+                                IsSpellCheckEnabled="False"
+                                Grid.Row="5"
+                                Grid.Column="2"
+                                Margin="0,10,0,0"
+                                VerticalAlignment="Center"
+                                BorderThickness="0"
+                                IsEnabled="{x:Bind ViewModel.IsInEdit, Mode=OneWay}"
+                                Text="{x:Bind ViewModel.PaidAmount, Mode=TwoWay}" />
+
+                        <TextBlock
+                                Grid.Row="6"
+                                Grid.Column="1"
+                                Margin="0,5,20,0"
                                 Padding="0,0,0,0"
                                 FontWeight="Bold"
-                                Text="إجمالي بعد الخصم" />
-                            <TextBlock
-                                Grid.Row="4"
+                                Foreground="DarkCyan"                            
+                                Text="المتبقي" />
+                        <TextBlock
+                                Grid.Row="6"
                                 Grid.Column="2"
-                                Margin="0,0,0,0"
+                                Margin="0,5,0,0"
                                 Padding="0,0,0,0"
                                 HorizontalAlignment="Right"
                                 FontWeight="Bold"
-                                Text="{x:Bind sys:String.Format('\{0:0.00\}', ViewModel.GrandTotal), Mode=OneWay}" />
-                        </Grid>
-                    </StackPanel>
+                                Foreground="DarkCyan"
+                                Text="{x:Bind sys:String.Format('\{0:0.00\}', ViewModel.UnpaidAmount), Mode=OneWay}" />
+                    </Grid>
+                </StackPanel>
 
-                </Grid>
+            </Grid>
 
-                    
-            </ScrollViewer>
 
-            <!--  This progress indicator should be hidden when the data is finished loading.  -->
-            <ProgressRing
+        </ScrollViewer>
+
+        <!--  This progress indicator should be hidden when the data is finished loading.  -->
+        <ProgressRing
                 x:Name="OrderLoadingProgressRing"
                 Width="40"
                 VerticalAlignment="Center"
@@ -565,11 +603,11 @@
                 Visibility="{x:Bind ViewModel.IsNotLoaded, Mode=OneWay}" />
 
 
-            <uc:AutoClosingInfoBar x:Name="InfoBarControl"
+        <uc:AutoClosingInfoBar x:Name="InfoBarControl"
                      Margin="0 0 5 20"
                      RelativePanel.AlignRightWithPanel="True"
                      RelativePanel.AlignBottomWithPanel="True"/>
-                
+
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>
                 <VisualState>

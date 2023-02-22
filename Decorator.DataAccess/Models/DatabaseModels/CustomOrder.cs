@@ -22,5 +22,9 @@ namespace Decorator.DataAccess.Models.DatabaseModels
         public float SubTotal => CustomOrderItems.Sum(x => x.Price * x.Quantity);
 
         public float GrandTotal => SubTotal - Discount;
+
+        public float PaidAmount { get; set; }
+
+        public float UnpaidAmount => GrandTotal - PaidAmount;
     }
 }

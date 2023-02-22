@@ -148,12 +148,30 @@ namespace Decorator.App.ViewModels
                     Model.Discount = value;
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(GrandTotal));
+                    OnPropertyChanged(nameof(UnpaidAmount));
+                    IsModified = true;
+                }
+            }
+        }
+
+        public float PaidAmount
+        {
+            get => Model.PaidAmount;
+            set
+            {
+                if (Model.PaidAmount != value)
+                {
+                    Model.PaidAmount = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(UnpaidAmount));
                     IsModified = true;
                 }
             }
         }
 
         public float GrandTotal => Model.GrandTotal;
+        public float UnpaidAmount => Model.UnpaidAmount;
+
         public bool CanRevert => Model != null && IsModified && IsExistingOrder;
         public bool IsInEdit
         {
@@ -326,9 +344,10 @@ namespace Decorator.App.ViewModels
             }
 
             OnPropertyChanged(nameof(OrderDetails));
-
             OnPropertyChanged(nameof(SubTotal));
             OnPropertyChanged(nameof(GrandTotal));
+            OnPropertyChanged(nameof(UnpaidAmount));
+
             IsModified = true;
         }
         private void NewOrderDetail_PropertyChanged(object sender, PropertyChangedEventArgs e) => UpdateNewOrderDetailBindings();

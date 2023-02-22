@@ -60,6 +60,7 @@ namespace Decorator.DataAccess
                 existing.CustomerAddress = order.CustomerAddress;
                 existing.CustomerPhone = order.CustomerPhone;
                 existing.Discount = order.Discount;
+                existing.PaidAmount = order.PaidAmount;
 
                 //To fix the error: "The instance of entity type 'CustomOrderItem' cannot be tracked
                 //because another instance with the same key value for {'Id'} is already being tracked."
