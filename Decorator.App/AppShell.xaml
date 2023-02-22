@@ -66,6 +66,12 @@
                     Content="{x:Bind OrderListLabel}" 
                     ToolTipService.ToolTip="{x:Bind OrderListLabel}"
                     Icon="AllApps"/>
+
+                <muxc:NavigationViewItem
+                    x:Name="CustomOrderListMenuItem"
+                    Content="{x:Bind CustomOrderListLabel}" 
+                    ToolTipService.ToolTip="{x:Bind CustomOrderListLabel}"
+                    Icon="AllApps"/>
             </muxc:NavigationView.MenuItems>
 
             <!-- In OnNavigatingToPage, we synchronize the selected item in the NavigationView with the current page. -->

@@ -29,6 +29,9 @@
     <None Remove="Decorator.ico" />
     <None Remove="MainWindow.xaml" />
     <None Remove="UserControls\CollapsibleSearchBox.xaml" />
+    <None Remove="Views\CustomOrderListPage.xaml" />
+    <None Remove="Views\Custom\CustomOrderDetailPage.xaml" />
+    <None Remove="Views\Custom\CustomOrderListPage.xaml" />
     <None Remove="Views\OrderDetailPage.xaml" />
     <None Remove="Views\OrderListPage.xaml" />
     <None Remove="Views\PrintProductReportDialog .xaml" />
@@ -81,6 +84,18 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="UserControls\CollapsibleSearchBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\CustomOrderListPage.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Custom\CustomOrderDetailPage.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Custom\CustomOrderListPage.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ProductDetailPage.xaml">

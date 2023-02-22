@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Navigation;
 using muxc = Microsoft.UI.Xaml.Controls;
 using Windows.System;
 using Decorator.App.Views;
+using Decorator.App.Views.Custom;
 
 namespace Decorator.App
 {
@@ -89,6 +90,7 @@ namespace Decorator.App
         public readonly string ProductListLabel = "قائمة المنتجات";
 
         public readonly string OrderListLabel = "الطلبيات";
+        public readonly string CustomOrderListLabel = "طلبيات حرة";
 
         /// <summary>
         /// Navigates to the page corresponding to the tapped item.
@@ -96,9 +98,12 @@ namespace Decorator.App
         private void NavigationView_ItemInvoked(muxc.NavigationView sender, muxc.NavigationViewItemInvokedEventArgs args)
         {
             var label = args.InvokedItem as string;
+
             var pageType =
                 label == ProductListLabel ? typeof(ProductListPage) :
-                label == OrderListLabel ? typeof(OrderListPage) : null;
+                label == OrderListLabel ? typeof(OrderListPage) :
+                label == CustomOrderListLabel ? typeof(CustomOrderListPage) : null;
+
             if (pageType != null && pageType != AppFrame.CurrentSourcePageType)
             {
                 AppFrame.Navigate(pageType);
@@ -120,6 +125,10 @@ namespace Decorator.App
                 else if (e.SourcePageType == typeof(OrderListPage))
                 {
                     NavView.SelectedItem = OrderListMenuItem;
+                }
+                else if (e.SourcePageType == typeof(CustomOrderListPage))
+                {
+                    NavView.SelectedItem = CustomOrderListMenuItem;
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using Decorator.DataAccess;
+using Decorator.DataAccess.Models.DatabaseModels;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using System;
@@ -13,7 +14,14 @@ namespace Decorator.App.Reporting
 
         public static void GenerateOrderReport(Order order)
         {
-            var document = new InvoiceDocument(order);
+            var document = new OrderInvoiceDocument(order);
+
+            GenerateDocumentAndShow(document);
+        }
+
+        public static void GenerateCustomOrderReport(CustomOrder order)
+        {
+            var document = new CustomOrderInvoiceDocument(order);
 
             GenerateDocumentAndShow(document);
         }

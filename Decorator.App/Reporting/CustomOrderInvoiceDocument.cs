@@ -1,4 +1,5 @@
 ﻿using Decorator.DataAccess;
+using Decorator.DataAccess.Models.DatabaseModels;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QuestPDF.Drawing;
 using QuestPDF.Fluent;
@@ -8,11 +9,11 @@ using System.Linq;
 
 namespace Decorator.App.Reporting
 {
-    public class InvoiceDocument : IDocument
+    public class CustomOrderInvoiceDocument : IDocument
     {
-        public Order Model { get;}
+        public CustomOrder Model { get;}
 
-        public InvoiceDocument(Order model)
+        public CustomOrderInvoiceDocument(CustomOrder model)
         {
             Model = model;
         }
@@ -55,12 +56,12 @@ namespace Decorator.App.Reporting
 
                 column.Item().Row(row =>
                 {
-                    row.RelativeItem().Component(new CustomerComponent(Model));
+                    row.RelativeItem().Component(new CustomerInfoComponent(Model));
                 });
 
                 column.Item().Element(ComposeTable);
 
-                var grandTotal = Model.OrderDetails.Sum(x => x.Price * x.Quantity);
+                var grandTotal = Model.CustomOrderItems.Sum(x => x.Price * x.Quantity);
                 var discount = Model.Discount;
 
                 if (discount != 0)
@@ -106,23 +107,13 @@ namespace Decorator.App.Reporting
                     header.Cell().ColumnSpan(5).PaddingTop(5).BorderBottom(1).BorderColor(Colors.Black);
                 });
 
-                foreach (var od in Model.OrderDetails)
+                foreach (var od in Model.CustomOrderItems)
                 {
-                    var index = Model.OrderDetails.IndexOf(od) + 1;
+                    var index = Model.CustomOrderItems.IndexOf(od) + 1;
 
                     table.Cell().Element(CellStyle).Text($"{index}");
 
-                    //A tempory solution to QuestPDF not supporting arabic with numbers in same string
-                    table.Cell().Element(CellStyle).Text(text =>
-                    {
-                        text.Span(od.ProductDimension.Product.Name);
-
-                        if(od.ProductDimension.DimensionX != 0 && od.ProductDimension.DimensionY != 0)
-                        {
-                            text.Span(" - ");
-                            text.Span($"{od.ProductDimension.DimensionX} × {od.ProductDimension.DimensionY}");
-                        }
-                    });
+                    table.Cell().Element(CellStyle).Text($"{od.Name}");
 
                     table.Cell().Element(CellStyle).AlignCenter().Text($"{od.Quantity}");
                     table.Cell().Element(CellStyle).AlignRight().Text(od.Price.ToString("0.00"));
@@ -161,11 +152,11 @@ namespace Decorator.App.Reporting
 
     }
 
-    public class CustomerComponent : IComponent
+    public class CustomerInfoComponent : IComponent
     {
-        private Order Model;
+        private CustomOrder Model;
 
-        public CustomerComponent(Order model)
+        public CustomerInfoComponent(CustomOrder model)
         {
             Model = model;
         }
