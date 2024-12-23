@@ -79,12 +79,12 @@ namespace Decorator.App
                     break;
             }
 
-            if (direction != FocusNavigationDirection.None &&
-                FocusManager.FindNextFocusableElement(direction) is Control control)
-            {
-                control.Focus(FocusState.Keyboard);
-                e.Handled = true;
-            }
+            //if (direction != FocusNavigationDirection.None &&
+            //    FocusManager.FindNextFocusableElement(direction) is Control control)
+            //{
+            //    control.Focus(FocusState.Keyboard);
+            //    e.Handled = true;
+            //}
         }
 
         public readonly string ProductListLabel = "قائمة المنتجات";

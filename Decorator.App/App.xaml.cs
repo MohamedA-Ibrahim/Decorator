@@ -4,6 +4,7 @@ using Decorator.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Animation;
+using QuestPDF.Infrastructure;
 using System;
 using System.IO;
 using Windows.Globalization;
@@ -38,6 +39,7 @@ namespace Decorator.App
         public App() {
             InitializeComponent();
             App.Current.RequestedTheme = ApplicationTheme.Light;
+            QuestPDF.Settings.License = LicenseType.Community;
         }
 
         /// <summary>
